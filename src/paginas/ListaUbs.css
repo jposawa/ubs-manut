@@ -1,0 +1,36 @@
+.titManutUbs {
+  position: fixed;
+  background: #fff;
+  width: 100%;
+  height: 4rem;
+  font-size: 1.4rem;
+  text-align: center;
+  z-index: 1;
+}
+.containerUbs {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  margin-top: 12%;
+  font-size: 1.2rem;
+  /*border:1px solid;*/
+  li {
+    background: #f5f9f3;
+    padding: 0.5rem;
+    height: auto;
+    margin-top: 0.5rem;
+  }
+  button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+.icone {
+ font-size: 1.5rem;
+}
+.opcLista {
+  display: flex;
+  p {
+    margin-left: 2rem;
+  }
+}
