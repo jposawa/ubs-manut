@@ -3,6 +3,7 @@ import { MenuPrincipal } from "./MenuPrincipal";
 import { Login } from "./Login";
 import { Logout } from "./Logout";
 import { ListaUbs } from "./ListaUbs";
+import { CadAltUbs } from "./cadAltUbs";
 
 export const RotasUrl = () => {
   return(
@@ -21,6 +22,12 @@ export const RotasUrl = () => {
       } />
       <Route path="listaubs" exact element = {
         <ListaUbs/>
+      } />
+       <Route path="cadaltubs" exact element = {
+        <CadAltUbs/>
+      } />
+      <Route path="cadaltubs/:id" element = {
+        <CadAltUbs/>
       } />
     </Routes>
   )

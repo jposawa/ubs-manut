@@ -1,6 +1,6 @@
 import React from "react";
 import { DeleteOutlined, FormOutlined, OrderedListOutlined, RollbackOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
@@ -19,12 +19,14 @@ export const ListaUbs = () => {
     navigate('/login');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
+  const codMunic = usuarioSessao.codMunicipio;
   const buscarDadosUbs = () => {
     setLoading(true);
     axios.get(URL_UBS, {
       params: {
         opc: 'buscaDadosUbs',
-        codMunicipio: '0',
+        codMunicipio: codMunic,
+        idUbs: '',
       }
     })
       .then(response => {
@@ -34,6 +36,7 @@ export const ListaUbs = () => {
       })
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
+        setDadosUbs(null);
         setLoading(false);
       });
   };
@@ -55,59 +58,77 @@ export const ListaUbs = () => {
 
   return (
     <>
-      <div className="titManutUbs"><h3>Unidades Básicas de Saúde</h3></div>
+      <div className="titManutUbs">Unidades Básicas de Saúde</div>
       <ul className="containerUbs">
         {
           dadosUbs.map((opc) => {
-            return (
-              <li key={opc.id}>
-                <p>
-                  <b>{opc.nome}</b>
-                </p>
-                <p>
-                  {opc.endereco + ' ' + opc.numero}
-                </p>
-                <p>
-                  {opc.bairro + ' - ' + opc.distrito}
-                </p>
-                <p>
-                  {opc.contato + ' - ' + opc.telContato}
-                </p>
-                <div className="opcLista">
+            if (dadosUbs.length > 0) {
+              return (
+                <li key={opc.id}>
                   <p>
-                    {nivelAcesso >= 9 ? (
-                      <Popconfirm
-                        title="Excluir UBS"
-                        description="Confirma exclusão ?"
-                        onConfirm={() => {
-                          excluirUbs(opc.id)
-                        }}
-                        okText="Sim"
-                        cancelText="Não"
-                      >
+                    <b>{opc.nome}</b>
+                  </p>
+                  <p>
+                    {opc.endereco} {opc.numero}
+                  </p>
+                  <p>
+                    {opc.bairro}  -  {opc.distrito}
+                  </p>
+                  <p>
+                    {opc.contato}  -  {opc.telContato}
+                  </p>
+
+                  <div className="opcLista">
+                    <p>
+                      {nivelAcesso >= 9 ? (
+                        <Popconfirm
+                          title="Excluir UBS"
+                          description="Confirma exclusão ?"
+                          onConfirm={() => {
+                            excluirUbs(opc.id)
+                          }}
+                          okText="Sim"
+                          cancelText="Não"
+                        >
+                          <button type="button">
+                            <DeleteOutlined className="icone" />
+                          </button>
+                        </Popconfirm>
+                      ) : null}
+                    </p>
+                    <p>
+                      {nivelAcesso >= 9 ? (
                         <button type="button">
-                          <DeleteOutlined className="icone" />
+                          <Link to={`/cadaltubs/${opc.id}`}>
+                            <FormOutlined  className="icone"/>
+                          </Link>
                         </button>
-                      </Popconfirm>
-                    ) : null}
-                  </p>
-                  <p>
-                    {nivelAcesso >= 9 ? (
-                      <button type="button" onClick={() => {
-                        setModalLancPadroes({ id: opc.idHistorico, historico: opc.historicoPadrao, status: opc.status })
-                      }
-                      }>
-                        <FormOutlined className="icone" />
-                      </button>
-                    ) : null}
-                  </p>
-                </div>
-              </li>
-          
-            )
+                      ) : null}
+                    </p>
+                  </div>
+                </li>
+              )
+            }
+            else {
+              <p>
+                Nada Cadastrado
+              </p>
+            }
           })
         }
       </ul>
+      <div className="menuUbs">
+        <Link to='../menuprincipal'>
+          <button type="button" className='botoesMenuUbs'>
+            Retornar
+          </button>
+        </Link>
+        <Link to='../cadaltubs'>
+          <button type="button" className='botoesMenuUbs'>
+            Cadastra UBS
+          </button>
+        </Link>
+      </div>
     </>
   )
 }
