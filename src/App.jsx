@@ -37,7 +37,7 @@ function App() {
       <section className='paginaCentral'>
         <RotasUrl />
       </section>
-      <footer className='rodape'>&copy; Todos os Diteitos Reservados - {anoAtual} - Eduardo</footer>
+      <footer className='rodape'>Todos os Diteitos Reservados  &copy; {anoAtual}  Eduardo</footer>
     </main>
   )
 }
