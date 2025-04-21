@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { URL_UBS } from '../compartilhados/constantes'
 import { Input } from 'antd'
 import './ListaUbs.css'
+import { gerarUid } from '../compartilhados/funcoes'
 
 export const CadAltUbs = () => {
   const { id } = useParams();
@@ -32,12 +33,23 @@ export const CadAltUbs = () => {
           idUbs: id,
         }
       }).then(response => {
-        defineDadosUbs(response.data);
-        console.log(dadosUbs);
-        console.log(response.data);
+        const novoRenderKey = gerarUid();
+
+        /**
+         * O problema aqui é que a resposta tava vindo um Array
+         * E o dadosUbs deveria ser apenas 1 item
+         * Então a solução foi pegar o primeiro item
+         */
+        defineDadosUbs(response.data[0]);
+
+        /**
+         * E aqui atualiza a key pra poder forçar a atualização dos elementos de interface
+         */
+        setRenderKey(novoRenderKey);
       })
-        .catch(() => {
-          toast.error("Erro na requisição, verifique sua conexão.")
+        .catch((error) => {
+          console.error("O erro que aconteceu:".error);
+          toast.error(`Erro na requisição, verifique sua conexão. ${error}`)
         })
     }
   }, []);
