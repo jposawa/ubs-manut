@@ -1,13 +1,17 @@
 import React from 'react'
 import axios from 'axios'
-import { usuarioLogadoAtom } from '../compartilhados/estados/'
+import { usuarioLogadoAtom } from '../compartilhados/estados'
 import { toast } from 'react-toastify'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { URL_UBS } from '../compartilhados/constantes'
-import { Input } from 'antd'
+import { Input } from '../componentes'
+import { formatarTelefone, gerarUid } from '../compartilhados/funcoes'
 import './ListaUbs.css'
-import { gerarUid } from '../compartilhados/funcoes'
+/**
+ * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
+ */
+import styles from "./CadAltUbs.module.css";
 
 export const CadAltUbs = () => {
   const { id } = useParams();
@@ -116,37 +120,45 @@ export const CadAltUbs = () => {
   return (
     <>
       <div className="titManutUbs">Cadastro da UBS</div>
-      <form className='formCadAltUbs' onSubmit={salvarDados}>
+      <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
-          <p>Nome:
-            <Input type="text" name="nome" defaultValue={dadosUbs?.nome} size="40" required key={renderKey} />
+          <p>
+            <Input label="Nome:" type="text" name="nome" defaultValue={dadosUbs?.nome} size="40" required key={renderKey} />
           </p>
-          <p>Endereço:
-            <Input type="text" name="endereco" defaultValue={dadosUbs?.endereco} size="40" required key={renderKey} />
+          <p>
+            <Input label="Endereço:" type="text" name="endereco" defaultValue={dadosUbs?.endereco} size="40" required key={renderKey} />
           </p>
-          <p>Número:
-            <Input type="text" name="numero" defaultValue={dadosUbs?.numero} size="6" key={renderKey} />
+          <p>
+            <Input label="Número:" type="text" name="numero" defaultValue={dadosUbs?.numero} size="6" key={renderKey} />
           </p>
-          <p>Bairro:
-            <Input type="text" name="bairro" defaultValue={dadosUbs?.bairro} size="30" required key={renderKey} />
+          <p>
+            <Input label="Bairro:" type="text" name="bairro" defaultValue={dadosUbs?.bairro} size="30" required key={renderKey} />
           </p>
-          <p>Distrito:
-            <Input type="text" name="distrito" defaultValue={dadosUbs?.distrito} size="30" key={renderKey} />
+          <p>
+            <Input label="Distrito:" type="text" name="distrito" defaultValue={dadosUbs?.distrito} size="30" key={renderKey} />
           </p>
-          <p>Cidade:
-            <Input type="text" disabled name="municipio" size="30" defaultValue={munic} key={renderKey} />
+          <p>
+            <Input label="Cidade:" type="text" disabled name="municipio" size="30" defaultValue={munic} key={renderKey} />
           </p>
-          <p>UF:
-            <Input type="text" disabled name="uf" size="2" defaultValue={uf} key={renderKey} />
+          <p>
+            <Input
+              label="UF:"
+              type="text"
+              disabled name="uf"
+              size="2"
+              defaultValue={uf}
+              key={renderKey}
+              mesmaLinha
+            />
           </p>
-          <p>CEP:
-            <Input type="tel" name="cep" defaultValue={dadosUbs?.cep} size="10" key={renderKey} />
+          <p>
+            <Input label="CEP:" type="tel" name="cep" defaultValue={dadosUbs?.cep} size="10" key={renderKey} mesmaLinha />
           </p>
-          <p>Contato:
-            <Input type="text" name="contato" defaultValue={dadosUbs?.contato} size="30" required key={renderKey} />
+          <p>
+            <Input label="Contato:" type="text" name="contato" defaultValue={dadosUbs?.contato} size="30" required key={renderKey} />
           </p>
-          <p>Telefone Contato:
-            <Input type="text" name="telContato" defaultValue={dadosUbs?.telContato} size="16" required key={renderKey} />
+          <p>
+            <Input label="Telefone Contato:" type="tel" name="telContato" defaultValue={dadosUbs?.telContato} size="16" onChange={formatarTelefone} required key={renderKey} />
           </p>
         </div>
         <div className="menuUbs">
