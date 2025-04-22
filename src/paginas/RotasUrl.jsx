@@ -3,7 +3,7 @@ import { MenuPrincipal } from "./MenuPrincipal";
 import { Login } from "./Login";
 import { Logout } from "./Logout";
 import { ListaUbs } from "./ListaUbs";
-import { CadAltUbs } from "./cadAltUbs";
+import { CadAltUbs } from "./CadAltUbs";
 
 export const RotasUrl = () => {
   return(
