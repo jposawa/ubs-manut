@@ -1,4 +1,4 @@
-.titManutUbs {
+.titManutTerc {
   position: fixed;
   background: #fff;
   width: 100%;
@@ -8,7 +8,7 @@
   text-align: center;
   z-index: 1;
 }
-.containerUbs {
+.containerTerc {
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -16,7 +16,7 @@
   font-size: 1.2rem;
   /*border:1px solid;*/
   li {
-    background: #f5f9f3;
+    background: #caf9b58d;
     padding: 0.5rem;
     height: auto;
     margin-top: 0.5rem;
@@ -35,7 +35,7 @@
     margin-left: 2rem;
   }
 }
-.menuUbs {
+.menuTerc {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
@@ -51,7 +51,7 @@
     font-size: 1.2rem;
   }
 }
-.botoesMenuUbs {
+.botoesMenuTerc {
   width: 7rem;
   height: 4rem;
   text-align: center;

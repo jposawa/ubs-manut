@@ -3,7 +3,9 @@ import { MenuPrincipal } from "./MenuPrincipal";
 import { Login } from "./Login";
 import { Logout } from "./Logout";
 import { ListaUbs } from "./ListaUbs";
-import { CadAltUbs } from "./CadAltUbs";
+import { CadAltUbs } from "./cadAltUbs";
+import { ListaTerceirizadas } from "./ListaTerceirizadas";
+import { CadAltTerceirizadas } from "./cadAltTerceirizadas";
 
 export const RotasUrl = () => {
   return(
@@ -28,6 +30,15 @@ export const RotasUrl = () => {
       } />
       <Route path="cadaltubs/:id" element = {
         <CadAltUbs/>
+      } />
+      <Route path="listaterceirizadas" exact element = {
+        <ListaTerceirizadas/>
+      } />
+       <Route path="cadaltterceirizadas/:id" exact element = {
+        <CadAltTerceirizadas/>
+      } />
+      <Route path="cadaltterceirizadas" exact element = {
+        <CadAltTerceirizadas/>
       } />
     </Routes>
   )

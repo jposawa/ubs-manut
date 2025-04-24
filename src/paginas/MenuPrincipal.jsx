@@ -54,12 +54,14 @@ export const MenuPrincipal = () => {
             UBS
           </button>
         </Link>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/terceirizadas.png' />
-          </p>
-          Terceirizadas
-        </button>
+        <Link to='/listaterceirizadas'>
+          <button type="button" className='botao2Menu'>
+            <p>
+              <img src='src/imagens/terceirizadas.png' />
+            </p>
+            Terceirizadas
+          </button>
+        </Link>
       </div>
       <div className='area4Menu'>
         <button type="button" className='botao1Menu'>
