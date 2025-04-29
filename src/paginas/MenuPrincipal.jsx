@@ -64,12 +64,14 @@ export const MenuPrincipal = () => {
         </Link>
       </div>
       <div className='area4Menu'>
-        <button type="button" className='botao1Menu'>
-          <p>
-            <img src='src/imagens/produtosItens.png' />
-          </p>
-          Produtos/Itens
-        </button>
+        <Link to='/listaprodutos'>
+          <button type="button" className='botao1Menu'>
+            <p>
+              <img src='src/imagens/produtosItens.png' />
+            </p>
+            Produtos/Itens
+          </button>
+        </Link>
         <Link to='/logout'>
           <button type="button" className='botao1Menu'>
             <p>

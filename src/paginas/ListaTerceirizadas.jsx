@@ -101,7 +101,7 @@ export const ListaTerceirizadas = () => {
                           cancelText="Não"
                         >
                           <button type="button">
-                            <DeleteOutlined className="icone" />
+                            <DeleteOutlined className="iconeDel" />
                           </button>
                         </Popconfirm>
                       ) : null}

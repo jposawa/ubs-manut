@@ -4,18 +4,18 @@ import { usuarioLogadoAtom } from '../compartilhados/estados'
 import { toast } from 'react-toastify'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { URL_UBS } from '../compartilhados/constantes'
+import { URL_PRODUTOS, URL_TERCEIRIZADAS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { formatarCep, formatarTelefone, gerarUid } from '../compartilhados/funcoes'
-import './ListaUbs.css'
+import './ListaProdutos.css'
 /**
  * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
  */
-import styles from "./CadAltUbs.module.css";
+import styles from "./CadAltProdutos.module.css";
 
-export const CadAltUbs = () => {
+export const CadAltProdutos = () => {
   const { id } = useParams();
-  const [dadosUbs, defineDadosUbs] = React.useState();
+  const [dadosProdutos, defineDadosProdutos] = React.useState();
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const navigate = useNavigate();
   /**
@@ -56,21 +56,20 @@ export const CadAltUbs = () => {
     }
 
     if (id && codMunic) {
-      axios.get(URL_UBS, {
+      axios.get(URL_PRODUTOS, {
         params: {
-          opc: 'buscaDadosUbs',
-          codMunicipio: codMunic,
-          idUbs: Number(id),
+          opc: 'buscaDadosProdutos',
+          idProd: Number(id),
         }
       }).then(response => {
         const novoRenderKey = gerarUid();
-
+        console.log(response.data);
         /**
          * O problema aqui é que a resposta tava vindo um Array
          * E o dadosUbs deveria ser apenas 1 item
          * Então a solução foi pegar o primeiro item
          */
-        defineDadosUbs(response.data[0]);
+        defineDadosProdutos(response.data[0]);
 
         /**
          * E aqui atualiza a key pra poder forçar a atualização dos elementos de interface
@@ -87,55 +86,36 @@ export const CadAltUbs = () => {
   const salvarDados = (dados) => {
     dados.preventDefault(); // para nao dar o refresh
     const { target } = dados; // pegar os inputs
-    const nome = target.nome.value; // pega os valores inputs
-    const endereco = target.endereco.value;
-    const numero = target.numero.value;
-    const bairro = target.bairro.value;
-    const distrito = target.distrito.value;
-    const cep = target.cep.value;
-    const contato = target.contato.value;
-    const telContato = target.telContato.value;
+    const descricao = target.descricao.value; // pega os valores inputs
+    const marca = target.marca.value;
+    const modelo = target.modelo.value;
+    const referencia = target.referencia.value;
     if (!id) {
-      axios.post(URL_UBS, {
-        opc: 'salvarUbs',
-        nome: nome,
-        endereco: endereco,
-        numero: numero,
-        bairro: bairro,
-        distrito: distrito,
-        municipio: munic,
-        codMunicipio: codMunic,
-        uf: uf,
-        cep: cep,
-        contato: contato,
-        telContato: telContato,
+      axios.post(URL_PRODUTOS, {
+        descricao: descricao,
+        marca: marca,
+        modelo: modelo,
+        referencia: referencia
       }
       ).then((resposta) => {
         toast.error(resposta.data);
        // console.log(resposta.data);
-        navigate('/listaubs');
+        navigate('/listaprodutos');
       }).catch((erro) => {
         toast.error(erro);
       })
     }
     else { /// altera, passando o ID
-      axios.put(`${URL_UBS}/${id}`, {
-        nome: nome,
-        endereco: endereco,
-        numero: numero,
-        bairro: bairro,
-        distrito: distrito,
-        municipio: munic,
-        codMunicipio: codMunic,
-        uf: uf,
-        cep: cep,
-        contato: contato,
-        telContato: telContato,
+      axios.put(`${URL_PRODUTOS}/${id}`, {
+        descricao: descricao,
+        marca: marca,
+        modelo: modelo,
+        referencia: referencia
       }
       ).then((resposta) => {
         toast.error(resposta.data);
       //  console.log(resposta.data);
-        navigate('/listaubs');
+        navigate('/listaprodutos');
       }).catch((erro) => {
         toast.error(erro);
       })
@@ -144,55 +124,29 @@ export const CadAltUbs = () => {
 
   return (
     <>
-      <div className="titManutUbs">Cadastro da UBS</div>
+      <div className="titManutProd">Cadastro de Produtos</div>
       <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
-            <Input label="Nome:" type="text" name="nome" defaultValue={dadosUbs?.nome} size="40" required key={renderKey} />
+            <Input label="Descrição:" type="text" name="descricao" defaultValue={dadosProdutos?.descricao} size="40" required key={renderKey} maxLength="40"/>
           </p>
           <p>
-            <Input label="Endereço:" type="text" name="endereco" defaultValue={dadosUbs?.endereco} size="40" required key={renderKey} />
+            <Input label="Marca:" type="text" name="marca" defaultValue={dadosProdutos?.marca} size="40" required key={renderKey} maxLength="40" />
           </p>
           <p>
-            <Input label="Número:" type="tel" maxLength="5" name="numero" defaultValue={dadosUbs?.numero} size="6" key={renderKey} />
+            <Input label="Modelo:" type="text" name="modelo" defaultValue={dadosProdutos?.modelo} size="40" required key={renderKey} maxLength="40" />
           </p>
           <p>
-            <Input label="Bairro:" type="text" name="bairro" defaultValue={dadosUbs?.bairro} size="30" required key={renderKey} />
-          </p>
-          <p>
-            <Input label="Distrito:" type="text" name="distrito" defaultValue={dadosUbs?.distrito} size="30" key={renderKey} />
-          </p>
-          <p>
-            <Input label="Cidade:" type="text" disabled name="municipio" size="30" defaultValue={munic} key={renderKey} />
-          </p>
-          <p>
-            <Input
-              label="UF:"
-              type="text"
-              disabled name="uf"
-              size="2"
-              defaultValue={uf}
-              key={renderKey}
-              mesmaLinha
-            />
-          </p>
-          <p>
-            <Input label="CEP:" type="tel" name="cep" defaultValue={dadosUbs?.cep} size="10" maxLength="9" key={renderKey} onChange={formatarCep} mesmaLinha />
-          </p>
-          <p>
-            <Input label="Contato:" type="text" name="contato" defaultValue={dadosUbs?.contato} size="30" required key={renderKey} />
-          </p>
-          <p>
-            <Input label="Telefone Contato:" type="tel" name="telContato" defaultValue={dadosUbs?.telContato} size="16" maxLength="16" onChange={formatarTelefone} required key={renderKey} />
+            <Input label="Referência:" type="text" maxLength="30" name="referencia" defaultValue={dadosProdutos?.referencia} size="30" key={renderKey} />
           </p>
         </div>
-        <div className="menuUbs">
-          <Link to='../listaubs'>
-            <button type="button" className='botoesMenuUbs'>
+        <div className="menuProd">
+          <Link to='../listaprodutos'>
+            <button type="button" className='botoesMenuProd'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuUbs'>
+          <button type="submit" className='botoesMenuProd'>
             Salvar
           </button>
         </div>

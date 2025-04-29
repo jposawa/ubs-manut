@@ -6,6 +6,10 @@ import { ListaUbs } from "./ListaUbs";
 import { CadAltUbs } from "./cadAltUbs";
 import { ListaTerceirizadas } from "./ListaTerceirizadas";
 import { CadAltTerceirizadas } from "./cadAltTerceirizadas";
+import { ListaProdutos } from "./ListaProdutos";
+import { CadAltProdutos } from "./cadAltProdutos";
+import { ListaProdutosUbs } from "./ListaProdutosUbs";
+import { CadastraProdutosUbs } from "./CadastraProdutosUbs";
 
 export const RotasUrl = () => {
   return(
@@ -39,6 +43,21 @@ export const RotasUrl = () => {
       } />
       <Route path="cadaltterceirizadas" exact element = {
         <CadAltTerceirizadas/>
+      } />
+       <Route path="listaprodutos" exact element = {
+        <ListaProdutos/>
+      } />
+       <Route path="cadaltprodutos/:id" exact element = {
+        <CadAltProdutos/>
+      } />
+      <Route path="cadaltprodutos" exact element = {
+        <CadAltProdutos/>
+      } />
+       <Route path="listaprodutosubs/:id" exact element = {
+        <ListaProdutosUbs/>
+      } />
+       <Route path="cadastraprodutosubs/:id" exact element = {
+        <CadastraProdutosUbs/>
       } />
     </Routes>
   )
