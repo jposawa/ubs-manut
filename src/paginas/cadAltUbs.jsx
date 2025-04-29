@@ -97,6 +97,7 @@ export const CadAltUbs = () => {
     const telContato = target.telContato.value;
     if (!id) {
       axios.post(URL_UBS, {
+        opc: 'salvarUbs',
         nome: nome,
         endereco: endereco,
         numero: numero,

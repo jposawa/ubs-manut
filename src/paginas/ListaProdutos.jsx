@@ -1,91 +1,86 @@
 import React from "react";
-import { DeleteOutlined, DiffOutlined, FormOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
-import { URL_UBS } from "../compartilhados/constantes";
-import './ListaUbs.css';
+import { URL_PRODUTOS } from "../compartilhados/constantes";
+import './ListaProdutos.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
-export const ListaUbs = () => {
+export const ListaProdutos = () => {
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [loading, setLoading] = React.useState(false);
-  const [dadosUbs, setDadosUbs] = React.useState([]);
+  const [dadosProdutos, setDadosProdutos] = React.useState([]);
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   if (!usuarioSessao) {
     navigate('/login');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
-  const codMunic = usuarioSessao.codMunicipio;
-  const buscarDadosUbs = () => {
+  const buscarDadosProdutos = () => {
     setLoading(true);
-    axios.get(URL_UBS, {
+    axios.get(URL_PRODUTOS, {
       params: {
-        opc: 'buscaDadosUbs',
-        codMunicipio: codMunic,
-        idUbs: '',
+        opc: 'buscaDadosProdutos',
+        idProd: '',
       }
     })
       .then(response => {
-        setDadosUbs(response.data);
-        //   console.log(response.data);
+        setDadosProdutos(response.data);
+     //   console.log(response.data);
         setLoading(false);
       })
       .catch(error => {
-        //    console.error('Erro ao buscar dados:', error);
-        setDadosUbs(null);
+    //    console.error('Erro ao buscar dados:', error);
+        setDadosProdutos(null);
         setLoading(false);
       });
   };
-  const excluirUbs = (id) => {
-    axios.delete(URL_UBS.concat("/", id)
-    ).then(() => {
+  const excluirProdutos = (id) => {
+    axios.delete(URL_PRODUTOS, {
+      params: {
+        opc: 'excluirProduto',
+        id: id
+      }
+    }).then(() => {
       toast.warn('Exclusão realizada com sucesso !');
-      buscarDadosUbs();
+      buscarDadosProdutos();
     }).catch((erro) => {
       toast.error("Erro na exclusão, verifique sua conexão.")
     })
   }
 
   React.useEffect(() => {
-    if (!loading && dadosUbs.length === 0) {
-      buscarDadosUbs();
+    if (!loading && dadosProdutos.length === 0) {
+      buscarDadosProdutos();
     }
   }, []);
 
   return (
     <>
-      <div className="titManutUbs">Unidades Básicas de Saúde</div>
-      <ul className="containerUbs">
+      <div className="titManutProd">Produtos Cadastrados</div>
+      <ul className="containerProd">
         {
-          dadosUbs.map((opc) => {
-            if (dadosUbs.length > 0) {
+          dadosProdutos.map((opc) => {
+            if (dadosProdutos.length > 0) {
               return (
                 <li key={opc.id}>
                   <p>
-                    <b>{opc.ordem} - {opc.nome}</b>
+                    <b>{opc.ordem} - {opc.descricao}</b>
                   </p>
                   <p>
-                    {opc.endereco} {opc.numero}
+                    {opc.marca} {opc.modelo} {opc.referencia}
                   </p>
-                  <p>
-                    {opc.bairro}  -  {opc.distrito}
-                  </p>
-                  <p>
-                    {opc.contato}  -  {opc.telContato}
-                  </p>
-
                   <div className="opcLista">
                     <p>
                       {nivelAcesso >= 9 ? (
                         <Popconfirm
-                          title="Excluir UBS"
+                          title="Excluir Produto"
                           description="Confirma exclusão ?"
                           onConfirm={() => {
-                            excluirUbs(opc.id)
+                            excluirProdutos(opc.id)
                           }}
                           okText="Sim"
                           cancelText="Não"
@@ -99,17 +94,8 @@ export const ListaUbs = () => {
                     <p>
                       {nivelAcesso >= 9 ? (
                         <button type="button">
-                          <Link to={`/cadaltubs/${opc.id}`}>
-                            <FormOutlined className="icone" />
-                          </Link>
-                        </button>
-                      ) : null}
-                    </p>
-                    <p>
-                      {nivelAcesso >= 9 ? (
-                        <button type="button">
-                          <Link to={`/listaprodutosubs/${opc.id}`}>
-                            <DiffOutlined className="icone" />
+                          <Link to={`/cadaltprodutos/${opc.id}`}>
+                            <FormOutlined  className="icone"/>
                           </Link>
                         </button>
                       ) : null}
@@ -118,18 +104,23 @@ export const ListaUbs = () => {
                 </li>
               )
             }
+            else {
+              <p>
+                Nada Cadastrado
+              </p>
+            }
           })
         }
       </ul>
-      <div className="menuUbs">
+      <div className="menuProd">
         <Link to='../menuprincipal'>
-          <button type="button" className='botoesMenuUbs'>
+          <button type="button" className='botoesMenuProd'>
             Retornar
           </button>
         </Link>
-        <Link to='../cadaltubs'>
-          <button type="button" className='botoesMenuUbs'>
-            Cadastra UBS
+        <Link to='../cadaltprodutos'>
+          <button type="button" className='botoesMenuProd'>
+            Cadastra Produto
           </button>
         </Link>
       </div>
