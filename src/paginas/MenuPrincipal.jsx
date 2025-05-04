@@ -18,12 +18,14 @@ export const MenuPrincipal = () => {
   return (
     <>
       <div className='area1Menu'>
-        <button type="button" className='botao3Menu'>
-          <p>
-            <img src='src/imagens/gerarOS.png' />
-          </p>
-          Gerar O.S
-        </button>
+        <Link to='/geraros'>
+          <button type="button" className='botao3Menu'>
+            <p>
+              <img src='src/imagens/gerarOS.png' />
+            </p>
+            Gerar O.S
+          </button>
+        </Link>
         <button type="button" className='botao2Menu'>
           <p>
             <img src='src/imagens/finalizarOS.png' />

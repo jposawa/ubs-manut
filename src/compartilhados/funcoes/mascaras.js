@@ -62,3 +62,13 @@ export const formatarValor = (event) => {
 export const toMoneyBr = (valor) => {
   return (valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 }
+
+export const dataAtual = () => {
+  const dataAtual = new Date();
+  let dia = dataAtual.getDate();
+  dia = dia.toString().padStart(2, '0');
+  let mes = dataAtual.getMonth() + 1; // Os meses são indexados a partir de 0
+  mes = mes.toString().padStart(2, '0');
+  const ano = dataAtual.getFullYear();
+  return (`${dia}/${mes}/${ano}`);
+}
