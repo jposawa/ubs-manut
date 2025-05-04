@@ -6,8 +6,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { URL_PRODUTOS, URL_TERCEIRIZADAS, URL_UBS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
-import { Select } from 'antd'
 import { dataAtual } from '../compartilhados/funcoes'
+import { Select } from '@mantine/core'
 
 export const GerarOs = () => {
   const [dadosUbs, defineDadosUbs] = React.useState([]);
@@ -17,10 +17,10 @@ export const GerarOs = () => {
   const [produtosUbs, defineProdutosUbs] = React.useState([]);
   const [dadosTerceirizada, defineDadosTerceirizada] = React.useState([]);
   const navigate = useNavigate();
-  const opcoesTerc = [];
   const [defaltValorProdUbs, setAlteraOpc] = React.useState('Selecione');
   const [opcoesUbs, setOpcoesUbs] = React.useState([]);
   const [opcoesPro, setOpcoesPro] = React.useState([]);
+  const [opcoesTerc, setOpcoesTerc] = React.useState([]);
 
   React.useEffect(() => {
     const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
@@ -45,7 +45,7 @@ export const GerarOs = () => {
 
     axios.get(URL_TERCEIRIZADAS, {
       params: {
-        opc: 'buscaDados',
+        opc: 'buscaDadosTerceirizadas',
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
@@ -118,6 +118,20 @@ export const GerarOs = () => {
     }
   }, [produtosUbs]);
 
+  React.useEffect(() => {
+    const lista = [];
+    for (const column in dadosTerceirizada) {
+      if (dadosTerceirizada.hasOwnProperty(column)) {
+        const opcao = {
+          value: dadosTerceirizada[column].id,
+          label: `${dadosTerceirizada[column].razao}: ${dadosTerceirizada[column].fantasia}`
+        }
+        lista.push(opcao);
+      }
+      setOpcoesTerc(lista);
+    }
+  }, [dadosTerceirizada]);
+
   return (
     <>
       <div className="titOS">Gerando Ordem de Serviço</div>
@@ -138,10 +152,10 @@ export const GerarOs = () => {
              */}
             <Select
               placeholder="Selecione"
-              loading={false}
               style={{ width: 420 }}
               onChange={handleChangeUbs}
-              options={opcoesUbs}
+              data={opcoesUbs}
+              required
             />
           </label>
           <label>
@@ -151,18 +165,18 @@ export const GerarOs = () => {
             <Select
               placeholder="Selecione"
               value={idPro}
-              loading={false}
               style={{ width: 420 }}
               onChange={handleChangePro}
-              options={opcoesPro}
+              data={opcoesPro}
+              required
             />
           </label>
           <p>
-          {
-            /**
-              * Será que seria o caso de colocar um <textarea> no lugar desse input?
-            */
-          }
+            {
+              /**
+                * Será que seria o caso de colocar um <textarea> no lugar desse input?
+              */
+            }
             <Input label="Defeito apresentado:" type="text" name="defeito" size="40" required maxLength="100" placeholder="Digite aqui o problema do aparelho/item" />
           </p>
           <label>
@@ -171,10 +185,10 @@ export const GerarOs = () => {
             </p>
             <Select
               defaultValue="Selecione"
-              loading={false}
               style={{ width: 420 }}
               onChange={handleChangeTerc}
-              options={opcoesTerc}
+              data={opcoesTerc}
+              required
             />
           </label>
         </div>
