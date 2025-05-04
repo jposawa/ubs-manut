@@ -10,6 +10,7 @@ import { ListaProdutos } from "./ListaProdutos";
 import { CadAltProdutos } from "./cadAltProdutos";
 import { ListaProdutosUbs } from "./ListaProdutosUbs";
 import { CadastraProdutosUbs } from "./CadastraProdutosUbs";
+import { GerarOs } from "./GerarOs";
 
 export const RotasUrl = () => {
   return(
@@ -58,6 +59,9 @@ export const RotasUrl = () => {
       } />
        <Route path="cadastraprodutosubs/:id" exact element = {
         <CadastraProdutosUbs/>
+      } />
+       <Route path="geraros" exact element = {
+        <GerarOs/>
       } />
     </Routes>
   )
