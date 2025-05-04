@@ -19,8 +19,9 @@ export const GerarOs = () => {
   const navigate = useNavigate();
   const opcoesTerc = [];
   const [defaltValorProdUbs, setAlteraOpc] = React.useState('Selecione');
-  const [opcoesUbs, setOpcoesUbs] = React.useState({});
-  const [opcoesPro, setOpcoesPro] = React.useState({});
+  const [opcoesUbs, setOpcoesUbs] = React.useState([]);
+  const [opcoesPro, setOpcoesPro] = React.useState([]);
+
   React.useEffect(() => {
     const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
     if (!usuarioSessao) {
@@ -59,8 +60,8 @@ export const GerarOs = () => {
 
   const handleChangeUbs = value => {
     setAlteraOpc('Selecione');
-    setIdPro([]);
     setIdUbs(value);
+    setIdPro();
     console.log(defaltValorProdUbs);
     axios.get(URL_PRODUTOS, {
       params: {
@@ -73,7 +74,7 @@ export const GerarOs = () => {
       defineProdutosUbs(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:".error);
+        console.error("O erro que aconteceu:", error);
         toast.error("Erro na requisição, verifique sua conexão.")
       })
     console.log(`selecionado: ${value}`);
@@ -116,7 +117,7 @@ export const GerarOs = () => {
       setOpcoesPro(lista);
     }
   }, [produtosUbs]);
- 
+
   return (
     <>
       <div className="titOS">Gerando Ordem de Serviço</div>
@@ -125,37 +126,49 @@ export const GerarOs = () => {
           <p>
             <label>Data da O.S.: {dataAtual()}</label>
           </p>
-          <p>
-            <label>UBS:</label>
-          </p>
-          <p>
+          <label>
+            <p>
+              UBS:
+            </p>
+            {/**
+              *Esse não precisou do value porque não tem um value "controlado".
+              * O select do produto, o de baixo, tem um `value={variavel}`, o que transforma em um componente "controlado".
+              * Por isso lá precisa do handleChange pra atualizar o valor da variável.
+              * Esse o handleChange ta servindo mais pra outras coisas, como fazer a nova chamada e zerar o select de baixo
+             */}
             <Select
-              defaultValue='Selecione'
+              placeholder="Selecione"
               loading={false}
               style={{ width: 420 }}
               onChange={handleChangeUbs}
               options={opcoesUbs}
             />
-          </p>
-          <p>
-            <label>Produto / Item com defeito:</label>
-          </p>
-          <p>
+          </label>
+          <label>
+            <p>
+              Produto / Item com defeito:
+            </p>
             <Select
-              defaultValue={defaltValorProdUbs}
+              placeholder="Selecione"
+              value={idPro}
               loading={false}
               style={{ width: 420 }}
               onChange={handleChangePro}
               options={opcoesPro}
             />
-          </p>
+          </label>
           <p>
+          {
+            /**
+              * Será que seria o caso de colocar um <textarea> no lugar desse input?
+            */
+          }
             <Input label="Defeito apresentado:" type="text" name="defeito" size="40" required maxLength="100" placeholder="Digite aqui o problema do aparelho/item" />
           </p>
-          <p>
-            <label>Terceirizada para encaminhar O.S:</label>
-          </p>
-          <p>
+          <label>
+            <p>
+              Terceirizada para encaminhar O.S:
+            </p>
             <Select
               defaultValue="Selecione"
               loading={false}
@@ -163,7 +176,7 @@ export const GerarOs = () => {
               onChange={handleChangeTerc}
               options={opcoesTerc}
             />
-          </p>
+          </label>
         </div>
         <div className="menuProd">
           <Link to="../menuprincipal">
