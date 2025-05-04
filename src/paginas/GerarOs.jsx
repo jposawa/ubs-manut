@@ -11,8 +11,8 @@ import { Select } from '@mantine/core'
 
 export const GerarOs = () => {
   const [dadosUbs, defineDadosUbs] = React.useState([]);
-  const [idUbs, setIdUbs] = React.useState([]);
-  const [idPro, setIdPro] = React.useState([]);
+  const [idUbs, setIdUbs] = React.useState("");
+  const [idPro, setIdPro] = React.useState("");
   const [idTerc, setIdTerc] = React.useState([]);
   const [produtosUbs, defineProdutosUbs] = React.useState([]);
   const [dadosTerceirizada, defineDadosTerceirizada] = React.useState([]);
@@ -61,7 +61,7 @@ export const GerarOs = () => {
   const handleChangeUbs = value => {
     setAlteraOpc('Selecione');
     setIdUbs(value);
-    setIdPro();
+    setIdPro("");
     console.log(defaltValorProdUbs);
     axios.get(URL_PRODUTOS, {
       params: {
@@ -132,10 +132,14 @@ export const GerarOs = () => {
     }
   }, [dadosTerceirizada]);
 
+  const gerenciaSubmit = (event) => {
+    event.preventDefault();
+  }
+
   return (
     <>
       <div className="titOS">Gerando Ordem de Serviço</div>
-      <form>
+      <form onSubmit={gerenciaSubmit}>
         <div className='containerInputs'>
           <p>
             <label>Data da O.S.: {dataAtual()}</label>
@@ -162,14 +166,21 @@ export const GerarOs = () => {
             <p>
               Produto / Item com defeito:
             </p>
-            <Select
+            <select
               placeholder="Selecione"
               value={idPro}
               style={{ width: 420 }}
-              onChange={handleChangePro}
+              onChange={({ currentTarget }) => handleChangePro(currentTarget.value)}
               data={opcoesPro}
               required
-            />
+            >
+              <option value="">Selecione</option>
+              {opcoesPro.map((opcao) => (
+                <option key={opcao.value} value={opcao.value}>
+                  {opcao.label}
+                </option>
+              ))}
+            </select>
           </label>
           <p>
             {
@@ -184,7 +195,7 @@ export const GerarOs = () => {
               Terceirizada para encaminhar O.S:
             </p>
             <Select
-              defaultValue="Selecione"
+              placeholder="Selecione"
               style={{ width: 420 }}
               onChange={handleChangeTerc}
               data={opcoesTerc}
