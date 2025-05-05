@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { URL_UBS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { formatarCep, formatarTelefone, gerarUid } from '../compartilhados/funcoes'
-import './ListaUbs.css'
+import './EstiloGeral.css'
 /**
  * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
  */
@@ -111,7 +111,7 @@ export const CadAltUbs = () => {
         telContato: telContato,
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
        // console.log(resposta.data);
         navigate('/listaubs');
       }).catch((erro) => {
@@ -133,7 +133,7 @@ export const CadAltUbs = () => {
         telContato: telContato,
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
       //  console.log(resposta.data);
         navigate('/listaubs');
       }).catch((erro) => {
@@ -144,7 +144,7 @@ export const CadAltUbs = () => {
 
   return (
     <>
-      <div className="titManutUbs">Cadastro da UBS</div>
+      <div className="tituloPaginas">Cadastro da UBS</div>
       <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
@@ -186,13 +186,13 @@ export const CadAltUbs = () => {
             <Input label="Telefone Contato:" type="tel" name="telContato" defaultValue={dadosUbs?.telContato} size="16" maxLength="16" onChange={formatarTelefone} required key={renderKey} />
           </p>
         </div>
-        <div className="menuUbs">
+        <div className="menuRodapePaginas">
           <Link to='../listaubs'>
-            <button type="button" className='botoesMenuUbs'>
+            <button type="button" className='botoesMenuRodape'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuUbs'>
+          <button type="submit" className='botoesMenuRodape'>
             Salvar
           </button>
         </div>

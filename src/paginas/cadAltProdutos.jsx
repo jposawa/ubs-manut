@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { URL_PRODUTOS, URL_TERCEIRIZADAS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { formatarCep, formatarTelefone, gerarUid } from '../compartilhados/funcoes'
-import './ListaProdutos.css'
+import './EstiloGeral.css'
 /**
  * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
  */
@@ -98,7 +98,7 @@ export const CadAltProdutos = () => {
         referencia: referencia
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
        // console.log(resposta.data);
         navigate('/listaprodutos');
       }).catch((erro) => {
@@ -113,7 +113,7 @@ export const CadAltProdutos = () => {
         referencia: referencia
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
       //  console.log(resposta.data);
         navigate('/listaprodutos');
       }).catch((erro) => {
@@ -124,7 +124,7 @@ export const CadAltProdutos = () => {
 
   return (
     <>
-      <div className="titManutProd">Cadastro de Produtos</div>
+      <div className="tituloPaginas">Cadastro de Produtos</div>
       <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
@@ -140,13 +140,13 @@ export const CadAltProdutos = () => {
             <Input label="Referência:" type="text" maxLength="30" name="referencia" defaultValue={dadosProdutos?.referencia} size="30" key={renderKey} />
           </p>
         </div>
-        <div className="menuProd">
+        <div className="menuRodapePaginas">
           <Link to='../listaprodutos'>
-            <button type="button" className='botoesMenuProd'>
+            <button type="button" className='botoesMenuRodape'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuProd'>
+          <button type="submit" className='botoesMenuRodape'>
             Salvar
           </button>
         </div>
