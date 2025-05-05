@@ -5,7 +5,7 @@ import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
 import { URL_PRODUTOS } from "../compartilhados/constantes";
-import './ListaProdutos.css';
+import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
@@ -60,8 +60,8 @@ export const ListaProdutos = () => {
 
   return (
     <>
-      <div className="titManutProd">Produtos Cadastrados</div>
-      <ul className="containerProd">
+      <div className="tituloPaginas">Produtos Cadastrados</div>
+      <ul className="containerInputs">
         {
           dadosProdutos.map((opc) => {
             if (dadosProdutos.length > 0) {
@@ -104,22 +104,17 @@ export const ListaProdutos = () => {
                 </li>
               )
             }
-            else {
-              <p>
-                Nada Cadastrado
-              </p>
-            }
           })
         }
       </ul>
-      <div className="menuProd">
+      <div className="menuRodapePaginas">
         <Link to='../menuprincipal'>
-          <button type="button" className='botoesMenuProd'>
+          <button type="button" className='botoesMenuRodape'>
             Retornar
           </button>
         </Link>
         <Link to='../cadaltprodutos'>
-          <button type="button" className='botoesMenuProd'>
+          <button type="button" className='botoesMenuRodape'>
             Cadastra Produto
           </button>
         </Link>

@@ -5,7 +5,7 @@ import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
 import { URL_TERCEIRIZADAS } from "../compartilhados/constantes";
-import './ListaTerceirizadas.css';
+import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
@@ -56,8 +56,8 @@ export const ListaTerceirizadas = () => {
 
   return (
     <>
-      <div className="titManutTerc">Terceirizadas Cadastradas</div>
-      <ul className="containerTerc">
+      <div className="tituloPaginas">Terceirizadas Cadastradas</div>
+      <ul className="containerInputs">
         {
           dadosTerceirizadas.map((opc) => {
             if (dadosTerceirizadas.length > 0) {
@@ -127,14 +127,14 @@ export const ListaTerceirizadas = () => {
           })
         }
       </ul>
-      <div className="menuTerc">
+      <div className="menuRodapePaginas">
         <Link to='../menuprincipal'>
-          <button type="button" className='botoesMenuTerc'>
+          <button type="button" className='botoesMenuRodape'>
             Retornar
           </button>
         </Link>
         <Link to='../cadaltterceirizadas'>
-          <button type="button" className='botoesMenuTerc'>
+          <button type="button" className='botoesMenuRodape'>
             Cadastra Terceirizada
           </button>
         </Link>

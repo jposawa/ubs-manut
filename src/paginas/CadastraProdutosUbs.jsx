@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { URL_PRODUTOS, URL_TERCEIRIZADAS, URL_UBS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { gerarUid } from '../compartilhados/funcoes'
-import './ListaProdutos.css'
+import './EstiloGeral.css'
 /**
  * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
  */
@@ -57,7 +57,7 @@ export const CadastraProdutosUbs = () => {
       ambiente: ambiente
     }
     ).then((resposta) => {
-      toast.error(resposta.data);
+      toast.success(resposta.data);
     //  console.log(resposta.data);
       navigate('/listaprodutosubs/' + id);
     }).catch((erro) => {
@@ -85,7 +85,7 @@ export const CadastraProdutosUbs = () => {
   //console.log(options);
   return (
     <>
-      <div className="titManutProd">Cadastro de Produtos</div>
+      <div className="titutoPagina">Cadastro de Produtos</div>
       <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
@@ -104,13 +104,13 @@ export const CadastraProdutosUbs = () => {
             <Input label="Ambiente instalado:" type="text" name="ambiente" size="40" required maxLength="40" placeholder="Ex.: recepção" />
           </p>
         </div>
-        <div className="menuProd">
+        <div className="menuRodapePaginas">
           <Link to={`../listaprodutosubs/${id}`}>
-            <button type="button" className='botoesMenuProd'>
+            <button type="button" className='botoesMenuRodape'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuProd'>
+          <button type="submit" className='botoesMenuRodape'>
             Salvar
           </button>
         </div>

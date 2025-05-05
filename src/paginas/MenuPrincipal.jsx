@@ -1,5 +1,5 @@
 import React from "react";
-import './MenuPrincipal.css';
+import './EstiloGeral.css';
 import { Link, useNavigate } from "react-router-dom";
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";

@@ -4,10 +4,11 @@ import { usuarioLogadoAtom } from '../compartilhados/estados'
 import { toast } from 'react-toastify'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { URL_PRODUTOS, URL_TERCEIRIZADAS, URL_UBS } from '../compartilhados/constantes'
+import { URL_OS, URL_PRODUTOS, URL_TERCEIRIZADAS, URL_UBS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { dataAtual } from '../compartilhados/funcoes'
 import { Select } from '@mantine/core'
+import './EstiloGeral.css'
 
 export const GerarOs = () => {
   const [dadosUbs, defineDadosUbs] = React.useState([]);
@@ -132,14 +133,34 @@ export const GerarOs = () => {
     }
   }, [dadosTerceirizada]);
 
-  const gerenciaSubmit = (event) => {
-    event.preventDefault();
+  const salvarDados = (dados) => {
+    dados.preventDefault(); // para nao dar o refresh
+    const { target } = dados; // pegar os inputs
+   // const idProduto = target.idProduto.value;
+    const defeito = target.defeito.value;
+    const solicitante = target.solicitante.value;
+
+    axios.post(URL_OS, {
+      idUbs : idUbs,
+      idPro: idPro,
+      idTerc: idTerc,
+      defeito: defeito,
+      solicitante: solicitante
+    }
+    ).then((resposta) => {
+      toast.success('Dados salvos com sucesso !');
+      console.log(resposta.data);
+      navigate('/menuprincipal');
+    }).catch((erro) => {
+      toast.warning(erro.response.request.statusText);
+      console.log(erro.response.request.statusText);
+    })
   }
 
   return (
     <>
-      <div className="titOS">Gerando Ordem de Serviço</div>
-      <form onSubmit={gerenciaSubmit}>
+      <div className="tituloPaginas">Gerando Ordem de Serviço</div>
+      <form onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
             <label>Data da O.S.: {dataAtual()}</label>
@@ -166,22 +187,22 @@ export const GerarOs = () => {
             <p>
               Produto / Item com defeito:
             </p>
-            <select
+            <Select
               placeholder="Selecione"
-              value={idPro}
               style={{ width: 420 }}
-              onChange={({ currentTarget }) => handleChangePro(currentTarget.value)}
+              onChange={handleChangePro}
               data={opcoesPro}
               required
-            >
-              <option value="">Selecione</option>
-              {opcoesPro.map((opcao) => (
-                <option key={opcao.value} value={opcao.value}>
-                  {opcao.label}
-                </option>
-              ))}
-            </select>
+            />
           </label>
+          <p>
+            {
+              /**
+                * Será que seria o caso de colocar um <textarea> no lugar desse input?
+              */
+            }
+            <Input label="Nome do(a) solicitante:" type="text" name="solicitante" size="40" required maxLength="40" placeholder="Digite aqui o nome do(a) solicitante." />
+          </p>
           <p>
             {
               /**
@@ -199,17 +220,17 @@ export const GerarOs = () => {
               style={{ width: 420 }}
               onChange={handleChangeTerc}
               data={opcoesTerc}
-              required
+              allowDeselect={true}
             />
           </label>
         </div>
-        <div className="menuProd">
+        <div className="menuRodapePaginas">
           <Link to="../menuprincipal">
-            <button type="button" className='botoesMenuProd'>
+            <button type="button" className='botoesMenuRodape'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuProd'>
+          <button type="submit" className='botoesMenuRodape'>
             Salvar O.S
           </button>
         </div>

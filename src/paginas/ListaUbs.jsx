@@ -5,7 +5,7 @@ import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
 import { URL_UBS } from "../compartilhados/constantes";
-import './ListaUbs.css';
+import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
@@ -58,8 +58,8 @@ export const ListaUbs = () => {
 
   return (
     <>
-      <div className="titManutUbs">Unidades Básicas de Saúde</div>
-      <ul className="containerUbs">
+      <div className="tituloPaginas">Unidades Básicas de Saúde</div>
+      <ul className="containerInputs">
         {
           dadosUbs.map((opc) => {
             if (dadosUbs.length > 0) {
@@ -121,14 +121,14 @@ export const ListaUbs = () => {
           })
         }
       </ul>
-      <div className="menuUbs">
+      <div className="menuRodapePaginas">
         <Link to='../menuprincipal'>
-          <button type="button" className='botoesMenuUbs'>
+          <button type="button" className='botoesMenuRodape'>
             Retornar
           </button>
         </Link>
         <Link to='../cadaltubs'>
-          <button type="button" className='botoesMenuUbs'>
+          <button type="button" className='botoesMenuRodape'>
             Cadastra UBS
           </button>
         </Link>

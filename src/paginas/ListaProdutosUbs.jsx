@@ -5,7 +5,7 @@ import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
 import { URL_PRODUTOS, URL_UBS } from "../compartilhados/constantes";
-import './ListaUbs.css';
+import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
@@ -81,7 +81,7 @@ export const ListaProdutosUbs = () => {
 
   return (
     <>
-      <ul className="containerUbs">
+      <ul className="containerInputs">
         {
           dadosUbs.map((opc) => {
             return (
@@ -135,14 +135,14 @@ export const ListaProdutosUbs = () => {
           })
         }
       </ul>
-      <div className="menuUbs">
+      <div className="menuRodapePaginas">
         <Link to='../listaubs'>
-          <button type="button" className='botoesMenuUbs'>
+          <button type="button" className='botoesMenuRodape'>
             Retornar
           </button>
         </Link>
         <Link to={`../cadastraprodutosubs/${id}`}>
-          <button type="button" className='botoesMenuUbs'>
+          <button type="button" className='botoesMenuRodape'>
             Incluir Produto/Item
           </button>
         </Link>

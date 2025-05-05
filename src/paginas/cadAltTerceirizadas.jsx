@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { URL_TERCEIRIZADAS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { formatarCep, formatarTelefone, gerarUid } from '../compartilhados/funcoes'
-import './ListaTerceirizadas.css'
+import './EstiloGeral.css'
 /**
  * Usar styles permite que diferentes arquivos tenham o mesmo nome de className, sem causar conflitos
  */
@@ -112,7 +112,7 @@ export const CadAltTerceirizadas = () => {
         telContato: telContato,
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
        // console.log(resposta.data);
         navigate('/listaterceirizadas');
       }).catch((erro) => {
@@ -134,7 +134,7 @@ export const CadAltTerceirizadas = () => {
         telContato: telContato,
       }
       ).then((resposta) => {
-        toast.error(resposta.data);
+        toast.success(resposta.data);
       //  console.log(resposta.data);
         navigate('/listaterceirizadas');
       }).catch((erro) => {
@@ -145,7 +145,7 @@ export const CadAltTerceirizadas = () => {
 
   return (
     <>
-      <div className="titManutTerc">Cadastro de Terceirizadas</div>
+      <div className="tituloPagina">Cadastro de Terceirizadas</div>
       <form className={styles.formPrincipal} onSubmit={salvarDados}>
         <div className='containerInputs'>
           <p>
@@ -183,13 +183,13 @@ export const CadAltTerceirizadas = () => {
             <Input label="Telefone Contato:" type="tel" name="telContato" defaultValue={dadosTerceirizadas?.telContato} size="16" maxLength="16" onChange={formatarTelefone} key={renderKey} />
           </p>
         </div>
-        <div className="menuTerc">
+        <div className="menuRodapePaginas">
           <Link to='../listaterceirizadas'>
-            <button type="button" className='botoesMenuTerc'>
+            <button type="button" className='botoesMenuRodape'>
               Cancelar
             </button>
           </Link>
-          <button type="submit" className='botoesMenuTerc'>
+          <button type="submit" className='botoesMenuRodape'>
             Salvar
           </button>
         </div>
