@@ -11,6 +11,7 @@ import { Select } from '@mantine/core'
 import './EstiloGeral.css'
 
 export const GerarOs = () => {
+  const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [dadosUbs, defineDadosUbs] = React.useState([]);
   const [idUbs, setIdUbs] = React.useState("");
   const [idPro, setIdPro] = React.useState("");
@@ -22,7 +23,7 @@ export const GerarOs = () => {
   const [opcoesUbs, setOpcoesUbs] = React.useState([]);
   const [opcoesPro, setOpcoesPro] = React.useState([]);
   const [opcoesTerc, setOpcoesTerc] = React.useState([]);
-
+  const codMunic = usuarioLogado.codMunicipio;
   React.useEffect(() => {
     const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
     if (!usuarioSessao) {
@@ -32,7 +33,7 @@ export const GerarOs = () => {
     axios.get(URL_UBS, {
       params: {
         opc: 'buscaDadosUbs',
-        codMunicipio: '2305506'
+        codMunicipio: codMunic
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
@@ -135,8 +136,7 @@ export const GerarOs = () => {
 
   const salvarDados = (dados) => {
     dados.preventDefault(); // para nao dar o refresh
-    const { target } = dados; // pegar os inputs
-   // const idProduto = target.idProduto.value;
+    const { target } = dados; 
     const defeito = target.defeito.value;
     const solicitante = target.solicitante.value;
 
@@ -177,7 +177,7 @@ export const GerarOs = () => {
              */}
             <Select
               placeholder="Selecione"
-              style={{ width: 420 }}
+              style={{ width: 400 }}
               onChange={handleChangeUbs}
               data={opcoesUbs}
               required
@@ -189,7 +189,7 @@ export const GerarOs = () => {
             </p>
             <Select
               placeholder="Selecione"
-              style={{ width: 420 }}
+              style={{ width: 400 }}
               onChange={handleChangePro}
               data={opcoesPro}
               required
@@ -201,7 +201,7 @@ export const GerarOs = () => {
                 * Será que seria o caso de colocar um <textarea> no lugar desse input?
               */
             }
-            <Input label="Nome do(a) solicitante:" type="text" name="solicitante" size="40" required maxLength="40" placeholder="Digite aqui o nome do(a) solicitante." />
+            <Input label="Defeito apresentado:" type="text" name="defeito" size="30" required maxLength="100" placeholder="Digite aqui o problema do aparelho/item" />
           </p>
           <p>
             {
@@ -209,7 +209,7 @@ export const GerarOs = () => {
                 * Será que seria o caso de colocar um <textarea> no lugar desse input?
               */
             }
-            <Input label="Defeito apresentado:" type="text" name="defeito" size="40" required maxLength="100" placeholder="Digite aqui o problema do aparelho/item" />
+            <Input label="Nome do(a) solicitante:" type="text" name="solicitante" size="30" required maxLength="40" placeholder="Digite aqui o nome do(a) solicitante." />
           </p>
           <label>
             <p>
@@ -217,7 +217,7 @@ export const GerarOs = () => {
             </p>
             <Select
               placeholder="Selecione"
-              style={{ width: 420 }}
+              style={{ width: 400 }}
               onChange={handleChangeTerc}
               data={opcoesTerc}
               allowDeselect={true}
