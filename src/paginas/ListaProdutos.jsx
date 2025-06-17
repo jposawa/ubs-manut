@@ -29,11 +29,11 @@ export const ListaProdutos = () => {
     })
       .then(response => {
         setDadosProdutos(response.data);
-     //   console.log(response.data);
+        //   console.log(response.data);
         setLoading(false);
       })
       .catch(error => {
-    //    console.error('Erro ao buscar dados:', error);
+        //    console.error('Erro ao buscar dados:', error);
         setDadosProdutos(null);
         setLoading(false);
       });
@@ -87,17 +87,19 @@ export const ListaProdutos = () => {
                         >
                           <button type="button">
                             <DeleteOutlined className="iconeDel" />
+                            Excluir
                           </button>
                         </Popconfirm>
                       ) : null}
                     </p>
                     <p>
                       {nivelAcesso >= 9 ? (
-                        <button type="button">
-                          <Link to={`/cadaltprodutos/${opc.id}`}>
-                            <FormOutlined  className="icone"/>
-                          </Link>
-                        </button>
+                        <Link to={`/cadaltprodutos/${opc.id}`}>
+                          <button type="button">
+                            <FormOutlined className="icone" />
+                            Alterar
+                          </button>
+                        </Link>
                       ) : null}
                     </p>
                   </div>

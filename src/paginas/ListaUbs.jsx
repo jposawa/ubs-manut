@@ -92,26 +92,29 @@ export const ListaUbs = () => {
                         >
                           <button type="button">
                             <DeleteOutlined className="iconeDel" />
+                            Excluir
                           </button>
                         </Popconfirm>
                       ) : null}
                     </p>
                     <p>
                       {nivelAcesso >= 9 ? (
-                        <button type="button">
-                          <Link to={`/cadaltubs/${opc.id}`}>
+                        <Link to={`/cadaltubs/${opc.id}`}>
+                          <button type="button">
                             <FormOutlined className="icone" />
-                          </Link>
-                        </button>
+                            Alterar
+                          </button>
+                        </Link>
                       ) : null}
                     </p>
                     <p>
                       {nivelAcesso >= 9 ? (
-                        <button type="button">
-                          <Link to={`/listaprodutosubs/${opc.id}`}>
+                        <Link to={`/listaprodutosubs/${opc.id}`}>
+                          <button type="button">
                             <DiffOutlined className="icone" />
-                          </Link>
-                        </button>
+                            Prod./Itens na UBS
+                          </button>
+                        </Link>
                       ) : null}
                     </p>
                   </div>

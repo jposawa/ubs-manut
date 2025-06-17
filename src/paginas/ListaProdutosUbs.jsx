@@ -113,23 +113,16 @@ export const ListaProdutosUbs = () => {
                               >
                                 <button type="button">
                                   <DeleteOutlined className="iconeDel" />
+                                  Excluir
                                 </button>
                               </Popconfirm>
                             ) : null}
-                          </p>
-                          <p>
-                            {'-------------------------------------------------------'}
                           </p>
                         </li>
                       )
                     })
                   }
                 </ul>
-                <div className="opcLista">
-                  <p>
-
-                  </p>
-                </div>
               </li>
             )
           })

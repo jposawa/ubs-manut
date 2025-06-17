@@ -26,20 +26,17 @@ export const MenuPrincipal = () => {
             Gerar O.S
           </button>
         </Link>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/finalizarOS.png' />
-          </p>
-          Finalizar O.S
-        </button>
+       
       </div>
       <div className='area2Menu'>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/servicosSolicitados.png' />
-          </p>
-          Serviços Solicitados
-        </button>
+        <Link to='/servicossolicitados'>
+          <button type="button" className='botao2Menu'>
+            <p>
+              <img src='src/imagens/servicosSolicitados.png' />
+            </p>
+            Serviços Solicitados
+          </button>
+        </Link>
         <button type="button" className='botao1Menu'>
           <p>
             <img src='src/imagens/servicosRealizados.png' />

@@ -1,101 +1,99 @@
 import React from "react";
-import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseSquareOutlined, DeleteOutlined, FormOutlined, PrinterOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
-import { URL_TERCEIRIZADAS } from "../compartilhados/constantes";
+import { URL_OS } from "../compartilhados/constantes";
 import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
+import { dataDoBanco } from "../compartilhados/funcoes";
 
-export const ListaTerceirizadas = () => {
+export const ServicosSolicitados = () => {
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [loading, setLoading] = React.useState(false);
-  const [dadosTerceirizadas, setDadosTerceirizadas] = React.useState([]);
+  const [dadosServicosSol, setDadosServicosSol] = React.useState([]);
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   if (!usuarioSessao) {
-    navigate('/login');
+    navigate('/menuprincipal');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
-  const buscarDadosTerceirizadas = () => {
+  const buscarDadosServicosSol = () => {
     setLoading(true);
-    axios.get(URL_TERCEIRIZADAS, {
+    axios.get(URL_OS, {
       params: {
-        opc: 'buscaDadosTerceirizadas',
-        idTerc: '',
+        opc: 'buscaDadosServicosSol',
       }
     })
       .then(response => {
-        setDadosTerceirizadas(response.data);
+        setDadosServicosSol(response.data);
         //   console.log(response.data);
         setLoading(false);
       })
       .catch(error => {
         //    console.error('Erro ao buscar dados:', error);
-        setDadosTerceirizadas(null);
+        setDadosServicosSol(null);
         setLoading(false);
       });
   };
-  const excluirTerceirizadas = (id) => {
-    axios.delete(URL_TERCEIRIZADAS.concat("/", id)
+  const excluirOS = (id) => {
+    axios.delete(URL_OS.concat("/", id)
     ).then(() => {
       toast.warn('Exclusão realizada com sucesso !');
-      buscarDadosTerceirizadas();
+      buscarDadosServicosSol();
     }).catch((erro) => {
       toast.error("Erro na exclusão, verifique sua conexão.")
     })
   }
 
   React.useEffect(() => {
-    if (!loading && dadosTerceirizadas.length === 0) {
-      buscarDadosTerceirizadas();
+    if (!loading && dadosServicosSol.length === 0) {
+      buscarDadosServicosSol();
     }
   }, []);
 
   return (
     <>
-      <div className="tituloPaginas">Terceirizadas Cadastradas</div>
+      <div className="tituloPaginas">Serviços Solicitados - O.S. Abertas</div>
       <ul className="containerInputs">
         {
-          dadosTerceirizadas.map((opc) => {
-            if (dadosTerceirizadas.length > 0) {
+          dadosServicosSol.map((opc) => {
+            if (dadosServicosSol.length > 0) {
               return (
                 <li key={opc.id}>
                   <p>
-                    <b>{opc.ordem} - {opc.razao}</b>
+                    <b>{opc.nomeUbs}</b>
                   </p>
                   <p>
-                    <b>{opc.fantasia}</b>
+                    <b>Abertura O.S.:</b> {dataDoBanco(opc.dataAberturaOS)}
                   </p>
                   <p>
-                    {opc.endereco}
+                    <b>Produto/Item:</b> {opc.descricao} {opc.marca} {opc.modelo} {opc.referencia}
                   </p>
                   <p>
-                    {opc.bairro}    {opc.cep}
+                    <b>Ambiente instalado:</b> {opc.ambienteInstalado}
                   </p>
                   <p>
-                    {opc.cidade}    {opc.uf}
+                    <b>Defeito apresentado:</b>
+                    {opc.defeitoApres}
                   </p>
                   <p>
-                    {opc.email}
+                    <b>Solicitante:</b> {opc.nomeSolicitante}
                   </p>
                   <p>
-                    {opc.responsavel}  -  {opc.telResp}
-                  </p>
-                  <p>
-                    {opc.contato}  -  {opc.telContato}
+                    <b>Terceirizada:</b> {opc.fantasiaTerc}
                   </p>
 
                   <div className="opcLista">
                     <p>
                       {nivelAcesso >= 9 ? (
                         <Popconfirm
-                          title="Excluir Terceirizada"
+                          title="Excluir O.S."
                           description="Confirma exclusão ?"
                           onConfirm={() => {
-                            excluirTerceirizadas(opc.id)
+                            excluirOS(opc.id)
                           }}
                           okText="Sim"
                           cancelText="Não"
@@ -109,10 +107,20 @@ export const ListaTerceirizadas = () => {
                     </p>
                     <p>
                       {nivelAcesso >= 9 ? (
-                        <Link to={`/cadaltterceirizadas/${opc.id}`}>
+                        <Link to={`/fecharos/${opc.id}`}>
                           <button type="button">
-                            <FormOutlined className="icone" />
-                            Alterar
+                            <CheckCircleOutlined className="icone" />
+                            Fechar O.S.
+                          </button>
+                        </Link>
+                      ) : null}
+                    </p>
+                    <p>
+                      {nivelAcesso >= 9 ? (
+                        <Link to={`/imprimiros/${opc.id}`}>
+                          <button type="button">
+                            <PrinterOutlined className="icone" />
+                            Imprimir
                           </button>
                         </Link>
                       ) : null}
@@ -133,11 +141,6 @@ export const ListaTerceirizadas = () => {
         <Link to='../menuprincipal'>
           <button type="button" className='botoesMenuRodape'>
             Retornar
-          </button>
-        </Link>
-        <Link to='../cadaltterceirizadas'>
-          <button type="button" className='botoesMenuRodape'>
-            Cadastra Terceirizada
           </button>
         </Link>
       </div>
