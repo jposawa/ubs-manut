@@ -11,6 +11,8 @@ import { CadAltProdutos } from "./cadAltProdutos";
 import { ListaProdutosUbs } from "./ListaProdutosUbs";
 import { CadastraProdutosUbs } from "./CadastraProdutosUbs";
 import { GerarOs } from "./GerarOs";
+import { ServicosSolicitados } from "./ServicosSolicitados";
+import { FecharOs } from "./FecharOs";
 
 export const RotasUrl = () => {
   return(
@@ -62,6 +64,12 @@ export const RotasUrl = () => {
       } />
        <Route path="geraros" exact element = {
         <GerarOs/>
+      } />
+       <Route path="fecharos/:id" exact element = {
+        <FecharOs/>
+      } />
+       <Route path="servicossolicitados" exact element = {
+        <ServicosSolicitados/>
       } />
     </Routes>
   )
