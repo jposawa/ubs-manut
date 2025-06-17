@@ -21,7 +21,7 @@ export const MenuPrincipal = () => {
         <Link to='/geraros'>
           <button type="button" className='botao3Menu'>
             <p>
-              <img src='src/imagens/gerarOS.png' />
+              <img src='public/gerarOS.png' />
             </p>
             Gerar O.S
           </button>
