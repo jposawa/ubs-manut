@@ -90,6 +90,11 @@ li {
   }
 }
 
+.msgAlerta {
+  text-align: center;
+  color: red;
+  font-size: 1.4rem;
+}
 /*  menu principal */
 
 .area1Menu,
