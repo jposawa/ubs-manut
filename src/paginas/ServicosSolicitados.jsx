@@ -25,6 +25,7 @@ export const ServicosSolicitados = () => {
     axios.get(URL_OS, {
       params: {
         opc: 'buscaDadosServicosSol',
+        status: 'A'
       }
     })
       .then(response => {
@@ -33,8 +34,7 @@ export const ServicosSolicitados = () => {
         setLoading(false);
       })
       .catch(error => {
-        //    console.error('Erro ao buscar dados:', error);
-        setDadosServicosSol(null);
+        ///  console.error('Erro ao buscar dados:', error);
         setLoading(false);
       });
   };
@@ -43,6 +43,7 @@ export const ServicosSolicitados = () => {
     ).then(() => {
       toast.warn('Exclusão realizada com sucesso !');
       buscarDadosServicosSol();
+      //navigate('/servicossolicitados');
     }).catch((erro) => {
       toast.error("Erro na exclusão, verifique sua conexão.")
     })
@@ -56,85 +57,82 @@ export const ServicosSolicitados = () => {
 
   return (
     <>
-      <div className="tituloPaginas">Serviços Solicitados - O.S. Abertas</div>
+      <div className="tituloPaginas">Ordens de Serviços em Aberto</div>
       <ul className="containerInputs">
-        {
+        {dadosServicosSol.length > 0 ? (
           dadosServicosSol.map((opc) => {
-            if (dadosServicosSol.length > 0) {
-              return (
-                <li key={opc.id}>
-                  <p>
-                    <b>{opc.nomeUbs}</b>
-                  </p>
-                  <p>
-                    <b>Abertura O.S.:</b> {dataDoBanco(opc.dataAberturaOS)}
-                  </p>
-                  <p>
-                    <b>Produto/Item:</b> {opc.descricao} {opc.marca} {opc.modelo} {opc.referencia}
-                  </p>
-                  <p>
-                    <b>Ambiente instalado:</b> {opc.ambienteInstalado}
-                  </p>
-                  <p>
-                    <b>Defeito apresentado:</b>
-                    {opc.defeitoApres}
-                  </p>
-                  <p>
-                    <b>Solicitante:</b> {opc.nomeSolicitante}
-                  </p>
-                  <p>
-                    <b>Terceirizada:</b> {opc.fantasiaTerc}
-                  </p>
+            return (
+              <li key={opc.id}>
+                <p>
+                  <b>{opc.nomeUbs}</b>
+                </p>
+                <p>
+                  <b>Abertura O.S.:</b> {dataDoBanco(opc.dataAberturaOS)}
+                </p>
+                <p>
+                  <b>Produto/Item:</b> {opc.descricao} {opc.marca} {opc.modelo} {opc.referencia}
+                </p>
+                <p>
+                  <b>Defeito apresentado:</b>
+                  {opc.defeitoApres}
+                </p>
+                <p>
+                  <b>Ambiente instalado:</b> {opc.ambienteInstalado}
+                </p>
+                <p>
+                  <b>Solicitante:</b> {opc.nomeSolicitante}
+                </p>
+                <p>
+                  <b>Terceirizada:</b> {opc.fantasiaTerc}
+                </p>
 
-                  <div className="opcLista">
-                    <p>
-                      {nivelAcesso >= 9 ? (
-                        <Popconfirm
-                          title="Excluir O.S."
-                          description="Confirma exclusão ?"
-                          onConfirm={() => {
-                            excluirOS(opc.id)
-                          }}
-                          okText="Sim"
-                          cancelText="Não"
-                        >
-                          <button type="button">
-                            <DeleteOutlined className="iconeDel" />
-                            Excluir
-                          </button>
-                        </Popconfirm>
-                      ) : null}
-                    </p>
-                    <p>
-                      {nivelAcesso >= 9 ? (
-                        <Link to={`/fecharos/${opc.id}`}>
-                          <button type="button">
-                            <CheckCircleOutlined className="icone" />
-                            Fechar O.S.
-                          </button>
-                        </Link>
-                      ) : null}
-                    </p>
-                    <p>
-                      {nivelAcesso >= 9 ? (
-                        <Link to={`/imprimiros/${opc.id}`}>
-                          <button type="button">
-                            <PrinterOutlined className="icone" />
-                            Imprimir
-                          </button>
-                        </Link>
-                      ) : null}
-                    </p>
-                  </div>
-                </li>
-              )
-            }
-            else {
-              <p>
-                Nada Cadastrado
-              </p>
-            }
+                <div className="opcLista">
+                  <p>
+                    {nivelAcesso >= 9 ? (
+                      <Popconfirm
+                        title="Excluir O.S."
+                        description="Confirma exclusão ?"
+                        onConfirm={() => {
+                          excluirOS(opc.id)
+                        }}
+                        okText="Sim"
+                        cancelText="Não"
+                      >
+                        <button type="button">
+                          <DeleteOutlined className="iconeDel" />
+                          Excluir
+                        </button>
+                      </Popconfirm>
+                    ) : null}
+                  </p>
+                  <p>
+                    {nivelAcesso >= 9 ? (
+                      <Link to={`/fecharos/${opc.id}`}>
+                        <button type="button">
+                          <CheckCircleOutlined className="icone" />
+                          Fechar O.S.
+                        </button>
+                      </Link>
+                    ) : null}
+                  </p>
+                  <p>
+                    {nivelAcesso >= 9 ? (
+                      <Link to={`/imprimeos/${opc.id}`}>
+                        <button type="button">
+                          <PrinterOutlined className="icone" />
+                          Imprimir
+                        </button>
+                      </Link>
+                    ) : null}
+                  </p>
+                </div>
+              </li>
+            )
           })
+        ) :
+          <div className="msgAlerta">
+            <p>Nenhuma ordem de serviço em aberto encontrada !</p>
+          </div>
         }
       </ul>
       <div className="menuRodapePaginas">

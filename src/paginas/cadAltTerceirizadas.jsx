@@ -177,10 +177,10 @@ export const CadAltTerceirizadas = () => {
             <Input label="Telefone Responsavel:" type="tel" name="telResp" defaultValue={dadosTerceirizadas?.telResp} size="16" maxLength="16" onChange={formatarTelefone} required key={renderKey} />
           </p>
           <p>
-            <Input label="Contato:" type="text" name="contato" defaultValue={dadosTerceirizadas?.contato} size="30" required key={renderKey} maxLength="30"/>
+            <Input label="Técnico responsável:" type="text" name="contato" defaultValue={dadosTerceirizadas?.contato} size="30" required key={renderKey} maxLength="30"/>
           </p>
           <p>
-            <Input label="Telefone Contato:" type="tel" name="telContato" defaultValue={dadosTerceirizadas?.telContato} size="16" maxLength="16" onChange={formatarTelefone} key={renderKey} />
+            <Input label="Telefone Técnico:" type="tel" name="telContato" defaultValue={dadosTerceirizadas?.telContato} size="16" maxLength="16" onChange={formatarTelefone} key={renderKey} />
           </p>
         </div>
         <div className="menuRodapePaginas">
