@@ -2,7 +2,9 @@ import React from 'react';
 import jsPDF from 'jspdf';
 import axios from 'axios';
 import { URL_OS } from '../compartilhados/constantes';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { dataAtual, dataDoBanco, formatarValor } from '../compartilhados/funcoes';
 
 export const ImprimeOS = () => {
   const { id } = useParams();
@@ -16,8 +18,9 @@ export const ImprimeOS = () => {
   React.useEffect(() => {
     axios.get(URL_OS, {
       params: {
-        opc: 'buscaDadosImprimirOS',
-        idOS: id
+        opc: 'buscaDadosServicosSol',
+        idOS: id,
+        status: 'A'
       }
     }).then((resposta) => {
       setDadosImprimirOS(resposta.data);
@@ -28,12 +31,12 @@ export const ImprimeOS = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   /// variaveis comuns para cabecalho, corpo e rodape
   const doc = new jsPDF('p', 'mm', 'a4');
+
   const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  const nomeArquivo = 'os_' + id + '.pdf';
-  let lin = 60;
+  const nomeArquivo = 'UBSmanut_OS' + id + '.pdf';
+  let lin = 47;
   let nPag = 0;
   //////////////////////////////////////////
   const geraPDF = () => {
@@ -49,38 +52,121 @@ export const ImprimeOS = () => {
 
       return (
         <li key={opc.id}>
-          {doc.text(opc.dataMovimento.substr(8, 2), 7, lin)}
-          {doc.line(13, lin - 4, 13, lin + 2)}
-          {doc.text(caixa.historicoPadrao.substr(0, 34), 14, lin)}
-          {doc.line(89, lin - 4, 89, lin + 2)}
-          {caixa?.idHistorico == 1 ? (
-            doc.text([caixa.nomeMembro.substr(0, 32)], 90, lin),
-            doc.line(157, lin - 4, 157, lin + 2),
-            doc.line(179, lin - 4, 179, lin + 2),
-            lin = lin + 5,
-            doc.text(('(Ref. mês: ' + caixa.mesAno + ')'), 90, lin),
-            doc.line(13, lin - 4, 13, lin + 2),
-            doc.line(89, lin - 4, 89, lin + 2),
-            doc.line(157, lin - 4, 157, lin + 2),
-            doc.line(179, lin - 4, 179, lin + 2))
-            : doc.text([caixa.complemento.substr(0, 32)], 90, lin)
-            [doc.line(157, lin - 4, 157, lin + 2),
-            doc.line(179, lin - 4, 179, lin + 2)]
-          }
-          {caixa?.statusLancamento == "D" ? (
-            doc.line(179, lin - 4, 179, lin + 2),
-            doc.text(toMoneyBr(caixa.valor), 177, lin, { align: 'right' })
-          ) : doc.text('------', 171, lin, { align: 'center' })}
-          {caixa?.statusLancamento == "C" ? (
-            doc.text(toMoneyBr(caixa.valor), 204, lin, { align: 'right' })
-          ) : doc.text('------', 198, lin, { align: 'center' })}
-          {doc.line(5, lin + 2, 205, lin + 2)}
+          {doc.setFillColor('#87CEEB')}
+          {doc.rect(5.1, 31.1, 199.8, 5.8, 'F')}
+          {doc.setFontSize(10)}
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Ordem de Serviço:', 8, 35)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.id.toString().padStart(6, '0'), 41, 35)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Data de abertura:', 65, 35)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(dataDoBanco(opc.dataAberturaOS), 95, 35)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Data de fechamento:', 125, 35)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(dataDoBanco(opc.dataFechamentoOS), 161, 35)}
+
+          {doc.line(5, 37, 205, 37)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Nome UBS: ', 8, 41)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.nomeUbs, 30, 41)}
+
+          {doc.line(5, 43, 205, 43)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Produto/Item : ', 8, 48)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.descricao + ' ' + opc.marca + ' ' + opc.modelo + ' ' + opc.referencia, 34, 48)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Ambiente Instalado: ', 8, 53)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.ambienteInstalado, 44, 53)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Defeito(s) apresentado(s): ', 8, 58)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.defeitoApres, 55, 58)}
+
+          {doc.line(5, 68, 205, 68)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Solicitante:', 8, 72)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.nomeSolicitante, 30, 72)}
+
+          {doc.line(5, 74, 205, 74)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Serviço(s) realizado(s):', 8, 79)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.servicoRealizado, 50, 79)}
+
+          {doc.line(5, 96, 205, 96)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Peça(s) substituída(s) e/ou reparada(s):', 8, 101)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.pecaSubstReparada, 78, 101)}
+
+          {doc.line(5, 119, 205, 119)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Valor do(s) serviço(s): R$', 8, 124)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.valorServico, 55, 124)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Valor da(s) peça(s): R$', 80, 124)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.valorPecas, 122, 124)}
+
+          {doc.line(5, 127, 205, 127)}
+
+          {doc.setFillColor('#87CEEB')}
+          {doc.rect(5.1, 127.1, 199.8, 7.8, 'F')}
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('TOTAL DA O.S.: R$', 8, 132)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.totalOS, 43, 132)}
+
+          {doc.line(5, 135, 205, 135)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Observação:', 8, 140)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.obs, 32, 140)}
+
+          {doc.line(5, 157, 205, 157)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Status:', 8, 162)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text('"' + opc.statusOS + '"', 22, 162)}
+
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('(A) Aberta    -    (F) Fechada', 40, 162)}
+
+          {doc.line(5, 165, 205, 165)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text('Parecer do responsável pelas manutenções nas UBS:', 8, 170)}
+
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.razaoTerc, 22, 280)}
+          {doc.text(opc.fantasiaTerc, 22, 285)}
+
+          {doc.text('Responsável pelas manutenções nas UBS', 124, 285)}
         </li >
       )
     })
+    doc.save(nomeArquivo);
   }
-  doc.save(nomeArquivo);
-
 
   const cabPDF = () => {
     doc.setDisplayMode('fullwidth', 'single');
@@ -92,39 +178,69 @@ export const ImprimeOS = () => {
     //const tPag = doc.getNumberOfPages();// getPageInfo(1).pageNumber;
     nPag = doc.getNumberOfPages();
     doc.setFontSize(7);
-    doc.text('Impresso por Sistemas Web - (11) 9 6769-3975 - Todos os Direitos Reservados', 90, 293);
+    doc.text('Impresso em ' + dataAtual() + ' por Sistemas Web - (11) 9 6769-3975 - Eduardo - Todos os Direitos Reservados.', 55, 293);
     doc.text('Página: ' + nPag, 190, 293);
     ////// fim rodape
-    doc.addImage(LOGO_CAPITULO, 6, 6, 30, 30);
+    //    doc.rect(5, 5, 38, 32);
+    //    doc.addImage('imagens/UBSIcone.JPG', "JPEG", 6, 6, 120, 100);
+
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text(NOME_CAPITULO, 65, 12);
-    doc.setFont("helvetica", "normal");
+    doc.text('Prefeitura Municipal de Iguatu-CE', 66, 12);
     doc.setFontSize(12);
-    doc.text(POTENCIA_CAPITULO, 65, 20);
-    doc.text(CIDADE_CAPITULO, 91, 28);
-    doc.text('Relatório de Fluxo de Caixa', 77, 35);
-    // doc.rect(172, 5, 33, 32);
-    doc.addImage(LOGO_POTENCIA, 174, 6, 30, 30);
-    doc.line(5, 37, 205, 37);
-    doc.setFontSize(10);
-    doc.text('Conta: ' + [nomeConta], 37, 35);
-    doc.text('Mês: ' + [mesSel], 152, 35);
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.line(5, 43, 205, 43);//col,lin,col,lin
-    { doc.setFillColor('#87CEEB') }
-    { doc.rect(5.1, lin - 3.9, 199.8, 5.8, 'F') }
-    doc.text('Dia', 6, 41);
-    doc.text('Descrição do lançamento', 14, 41);
-    doc.text('Complemento', 90, 41);
-    doc.text('Débito', 165, 41);
-    doc.text('Crédito', 189, 41);
-    doc.line(13, 37, 13, 43);
-    doc.line(89, 37, 89, 43);
-    doc.line(157, 37, 157, 43);
-    doc.line(179, 37, 179, 43);
+    doc.text('Controle de Manutenções em Unidades Básicas de Saúde', 47, 20);
     doc.setFont("helvetica", "normal");
-  }
-}
+    doc.setFontSize(11);
 
+    doc.text('Iguatu-CE', 94, 26);
+
+    //    doc.rect(167, 5, 38, 32);
+    //doc.addImage('Logo da Prefeitura', 174, 6, 30, 30);
+    doc.line(5, 31, 205, 31);
+    // doc.setFontSize(10);
+    /*  doc.text('Conta: ' + [nomeConta], 37, 35);
+      doc.text('Mês: ' + [mesSel], 152, 35);
+      */
+    /*
+     doc.setFontSize(12);
+     doc.setFont("helvetica", "bold");
+     doc.line(5, 43, 205, 43);//col,lin,col,lin
+     { doc.setFillColor('#87CEEB') }
+     { doc.rect(5.1, lin - 3.9, 199.8, 5.8, 'F') }
+     doc.text('Dia', 6, 41);
+     doc.text('Descrição do lançamento', 14, 41);
+     doc.text('Complemento', 90, 41);
+     doc.text('Débito', 165, 41);
+     doc.text('Crédito', 189, 41);
+     doc.line(13, 37, 13, 43);
+     doc.line(89, 37, 89, 43);
+     doc.line(157, 37, 157, 43);
+     doc.line(179, 37, 179, 43);
+     doc.setFont("helvetica", "normal");
+     */
+  }
+
+  return (
+    <>
+      <div className='titGerarPDF'>
+        <h3>Gerar Arquivo PDF</h3>
+      </div>
+      <div className='containerGerarPDF'>
+        <p>
+          Ao confirmar será gerado um arquivo no formato PDF com a Ordem de Serviço selecionada.
+        </p>
+        <p>
+          A impressão irá depender do aplicativo instalado em seu aparelho  para tal função.
+        </p>
+      </div>
+      <div>
+        <Link to='/servicossolicitados'>
+          <button className='menuRodapePaginas' type="reset" >Cancelar
+          </button>
+        </Link>
+        <button className='menuRodapePaginas' type="button" onClick={geraPDF}>Confirmar PDF
+        </button>
+      </div>
+    </>
+  );
+}
