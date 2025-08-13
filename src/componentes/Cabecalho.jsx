@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
-import { LOGO_UBS } from "../compartilhados/constantes"
 import { usuarioLogadoAtom } from "../compartilhados/estados";
+import { Logo } from ".";
 
 export const Cabecalho = () => {
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
@@ -11,7 +11,7 @@ export const Cabecalho = () => {
   return (
     <header className="cabecalho">
       <div>
-        <img src={LOGO_UBS} />
+        <Logo />
         <h4>Iguatu-CE</h4>
       </div>
       <div className="dadosCabecalho">
