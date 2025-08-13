@@ -15,7 +15,7 @@ export const Cabecalho = () => {
         <h4>Iguatu-CE</h4>
       </div>
       <div className="dadosCabecalho">
-        <h4>Controle de Manutenções em Unidades Básicas de Saúde</h4>
+        <h4>Gestor de Manutenções de Unidades Básicas de Saúde</h4>
         <h5>{nomeUsuario}</h5>
       </div>
     </header>
