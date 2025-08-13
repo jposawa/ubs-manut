@@ -3,6 +3,17 @@ import { MenuPrincipal } from "./MenuPrincipal";
 import { Login } from "./Login";
 import { Logout } from "./Logout";
 import { ListaUbs } from "./ListaUbs";
+import { CadAltUbs } from "./cadAltUbs";
+import { ListaTerceirizadas } from "./ListaTerceirizadas";
+import { CadAltTerceirizadas } from "./cadAltTerceirizadas";
+import { ListaProdutos } from "./ListaProdutos";
+import { CadAltProdutos } from "./cadAltProdutos";
+import { ListaProdutosUbs } from "./ListaProdutosUbs";
+import { CadastraProdutosUbs } from "./CadastraProdutosUbs";
+import { GerarOs } from "./GerarOs";
+import { ServicosSolicitados } from "./ServicosSolicitados";
+import { FecharOs } from "./FecharOs";
+import { ImprimeOS } from "./ImprimeOS";
 
 export const RotasUrl = () => {
   return(
@@ -21,6 +32,48 @@ export const RotasUrl = () => {
       } />
       <Route path="listaubs" exact element = {
         <ListaUbs/>
+      } />
+       <Route path="cadaltubs" exact element = {
+        <CadAltUbs/>
+      } />
+      <Route path="cadaltubs/:id" element = {
+        <CadAltUbs/>
+      } />
+      <Route path="listaterceirizadas" exact element = {
+        <ListaTerceirizadas/>
+      } />
+       <Route path="cadaltterceirizadas/:id" exact element = {
+        <CadAltTerceirizadas/>
+      } />
+      <Route path="cadaltterceirizadas" exact element = {
+        <CadAltTerceirizadas/>
+      } />
+       <Route path="listaprodutos" exact element = {
+        <ListaProdutos/>
+      } />
+       <Route path="cadaltprodutos/:id" exact element = {
+        <CadAltProdutos/>
+      } />
+      <Route path="cadaltprodutos" exact element = {
+        <CadAltProdutos/>
+      } />
+       <Route path="listaprodutosubs/:id" exact element = {
+        <ListaProdutosUbs/>
+      } />
+       <Route path="cadastraprodutosubs/:id" exact element = {
+        <CadastraProdutosUbs/>
+      } />
+       <Route path="geraros" exact element = {
+        <GerarOs/>
+      } />
+       <Route path="fecharos/:id" exact element = {
+        <FecharOs/>
+      } />
+       <Route path="servicossolicitados" exact element = {
+        <ServicosSolicitados/>
+      } />
+      <Route path="imprimeos/:id" exact element = {
+        <ImprimeOS/>
       } />
     </Routes>
   )

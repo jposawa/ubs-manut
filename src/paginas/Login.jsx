@@ -6,6 +6,7 @@ import { useSetRecoilState } from 'recoil'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import { URL_LOGIN_UBS } from '../compartilhados/constantes'
+import { IoMdLogIn } from "react-icons/io";
 
 export const Login = () => {
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
@@ -58,7 +59,7 @@ export const Login = () => {
           </div>
           <div>
             <button type="submit" className='botaoAcessar'>
-              <img src='src/imagens/produtosItens.png' />
+              <IoMdLogIn />
               Acessar
             </button>
           </div>

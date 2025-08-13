@@ -1,78 +1,88 @@
 import React from "react";
-import { DeleteOutlined, DiffOutlined, FormOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Popconfirm } from "antd";
 import { toast } from "react-toastify";
-import { URL_UBS } from "../compartilhados/constantes";
+import { URL_TERCEIRIZADAS } from "../compartilhados/constantes";
 import './EstiloGeral.css';
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
 
-export const ListaUbs = () => {
+export const ListaTerceirizadas = () => {
   const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [loading, setLoading] = React.useState(false);
-  const [dadosUbs, setDadosUbs] = React.useState([]);
+  const [dadosTerceirizadas, setDadosTerceirizadas] = React.useState([]);
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   if (!usuarioSessao) {
     navigate('/login');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
-  const codMunic = usuarioSessao.codMunicipio;
-  const buscarDadosUbs = () => {
+  const buscarDadosTerceirizadas = () => {
     setLoading(true);
-    axios.get(URL_UBS, {
+    axios.get(URL_TERCEIRIZADAS, {
       params: {
-        opc: 'buscaDadosUbs',
-        codMunicipio: codMunic,
-        idUbs: '',
+        opc: 'buscaDadosTerceirizadas',
+        idTerc: '',
       }
     })
       .then(response => {
-        setDadosUbs(response.data);
+        setDadosTerceirizadas(response.data);
         //   console.log(response.data);
         setLoading(false);
       })
       .catch(error => {
         //    console.error('Erro ao buscar dados:', error);
-        setDadosUbs(null);
+        setDadosTerceirizadas(null);
         setLoading(false);
       });
   };
-  const excluirUbs = (id) => {
-    axios.delete(URL_UBS.concat("/", id)
+  const excluirTerceirizadas = (id) => {
+    axios.delete(URL_TERCEIRIZADAS.concat("/", id)
     ).then(() => {
       toast.warn('Exclusão realizada com sucesso !');
-      buscarDadosUbs();
+      buscarDadosTerceirizadas();
     }).catch((erro) => {
       toast.error("Erro na exclusão, verifique sua conexão.")
     })
   }
 
   React.useEffect(() => {
-    if (!loading && dadosUbs.length === 0) {
-      buscarDadosUbs();
+    if (!loading && dadosTerceirizadas.length === 0) {
+      buscarDadosTerceirizadas();
     }
   }, []);
 
   return (
     <>
-      <div className="tituloPaginas">Unidades Básicas de Saúde</div>
+      <div className="tituloPaginas">Terceirizadas Cadastradas</div>
       <ul className="containerInputs">
         {
-          dadosUbs.map((opc) => {
-            if (dadosUbs.length > 0) {
+          dadosTerceirizadas.map((opc) => {
+            if (dadosTerceirizadas.length > 0) {
               return (
                 <li key={opc.id}>
                   <p>
-                    <b>{opc.ordem} - {opc.nome}</b>
+                    <b>{opc.ordem} - {opc.razao}</b>
                   </p>
                   <p>
-                    {opc.endereco} {opc.numero}
+                    <b>{opc.fantasia}</b>
                   </p>
                   <p>
-                    {opc.bairro}  -  {opc.distrito}
+                    {opc.endereco}
+                  </p>
+                  <p>
+                    {opc.bairro}    {opc.cep}
+                  </p>
+                  <p>
+                    {opc.cidade}    {opc.uf}
+                  </p>
+                  <p>
+                    {opc.email}
+                  </p>
+                  <p>
+                    {opc.responsavel}  -  {opc.telResp}
                   </p>
                   <p>
                     {opc.contato}  -  {opc.telContato}
@@ -82,10 +92,10 @@ export const ListaUbs = () => {
                     <p>
                       {nivelAcesso >= 9 ? (
                         <Popconfirm
-                          title="Excluir UBS"
+                          title="Excluir Terceirizada"
                           description="Confirma exclusão ?"
                           onConfirm={() => {
-                            excluirUbs(opc.id)
+                            excluirTerceirizadas(opc.id)
                           }}
                           okText="Sim"
                           cancelText="Não"
@@ -99,7 +109,7 @@ export const ListaUbs = () => {
                     </p>
                     <p>
                       {nivelAcesso >= 9 ? (
-                        <Link to={`/cadaltubs/${opc.id}`}>
+                        <Link to={`/cadaltterceirizadas/${opc.id}`}>
                           <button type="button">
                             <FormOutlined className="icone" />
                             Alterar
@@ -107,19 +117,14 @@ export const ListaUbs = () => {
                         </Link>
                       ) : null}
                     </p>
-                    <p>
-                      {nivelAcesso >= 9 ? (
-                        <Link to={`/listaprodutosubs/${opc.id}`}>
-                          <button type="button">
-                            <DiffOutlined className="icone" />
-                            Prod./Itens na UBS
-                          </button>
-                        </Link>
-                      ) : null}
-                    </p>
                   </div>
                 </li>
               )
+            }
+            else {
+              <p>
+                Nada Cadastrado
+              </p>
             }
           })
         }
@@ -130,9 +135,9 @@ export const ListaUbs = () => {
             Retornar
           </button>
         </Link>
-        <Link to='../cadaltubs'>
+        <Link to='../cadaltterceirizadas'>
           <button type="button" className='botoesMenuRodape'>
-            Cadastra UBS
+            Cadastra Terceirizada
           </button>
         </Link>
       </div>

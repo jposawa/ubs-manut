@@ -1,5 +1,5 @@
 import React from "react";
-import './MenuPrincipal.css';
+import './EstiloGeral.css';
 import { Link, useNavigate } from "react-router-dom";
 import { usuarioLogadoAtom } from "../compartilhados/estados";
 import { useRecoilValue } from "recoil";
@@ -18,26 +18,25 @@ export const MenuPrincipal = () => {
   return (
     <>
       <div className='area1Menu'>
-        <button type="button" className='botao3Menu'>
-          <p>
-            <img src='src/imagens/gerarOS.png' />
-          </p>
-          Gerar O.S
-        </button>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/finalizarOS.png' />
-          </p>
-          Finalizar O.S
-        </button>
+        <Link to='/geraros'>
+          <button type="button" className='botao3Menu'>
+            <p>
+              <img src='public/gerarOS.png' />
+            </p>
+            Gerar O.S
+          </button>
+        </Link>
+       
       </div>
       <div className='area2Menu'>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/servicosSolicitados.png' />
-          </p>
-          Serviços Solicitados
-        </button>
+        <Link to='/servicossolicitados'>
+          <button type="button" className='botao2Menu'>
+            <p>
+              <img src='src/imagens/servicosSolicitados.png' />
+            </p>
+            Serviços Solicitados
+          </button>
+        </Link>
         <button type="button" className='botao1Menu'>
           <p>
             <img src='src/imagens/servicosRealizados.png' />
@@ -54,20 +53,24 @@ export const MenuPrincipal = () => {
             UBS
           </button>
         </Link>
-        <button type="button" className='botao2Menu'>
-          <p>
-            <img src='src/imagens/terceirizadas.png' />
-          </p>
-          Terceirizadas
-        </button>
+        <Link to='/listaterceirizadas'>
+          <button type="button" className='botao2Menu'>
+            <p>
+              <img src='src/imagens/terceirizadas.png' />
+            </p>
+            Terceirizadas
+          </button>
+        </Link>
       </div>
       <div className='area4Menu'>
-        <button type="button" className='botao1Menu'>
-          <p>
-            <img src='src/imagens/produtosItens.png' />
-          </p>
-          Produtos/Itens
-        </button>
+        <Link to='/listaprodutos'>
+          <button type="button" className='botao1Menu'>
+            <p>
+              <img src='src/imagens/produtosItens.png' />
+            </p>
+            Produtos/Itens
+          </button>
+        </Link>
         <Link to='/logout'>
           <button type="button" className='botao1Menu'>
             <p>
