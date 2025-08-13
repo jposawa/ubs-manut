@@ -1,4 +1,4 @@
-import CaminhoLogo from "../imagens/UBSLogo1.png";
+import CaminhoLogo from "../imagens/UBSLogo.png";
 
 export const Logo = (props) => {
   const { className = "", style } = props;
