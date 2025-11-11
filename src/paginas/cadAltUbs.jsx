@@ -79,7 +79,7 @@ export const CadAltUbs = () => {
       })
         .catch((error) => {
           console.error("O erro que aconteceu:".error);
-          toast.error("Erro na requisição, verifique sua conexão.")
+          toast.error(`Erro na requisição, verifique sua conexão. ${error}`)
         })
     }
   }, [id, codMunic]);
