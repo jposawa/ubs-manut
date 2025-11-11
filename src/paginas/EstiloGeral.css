@@ -49,10 +49,6 @@ li {
   border-radius: 0.5rem;
   padding: 0.5rem;
   margin-top: 0.3rem;
-  li {
-    border: 1px solid;
-    margin-left: -11%;
-  }
   button {
     font-size: 0.8rem;
   }
@@ -65,6 +61,13 @@ li {
   }
 }
 
+.listaPrincipal {
+
+  padding: 2% 5%;
+  height: 100%;
+  overflow: auto;
+
+}
 .menuRodapePaginas {
   display: flex;
   width: 100%;

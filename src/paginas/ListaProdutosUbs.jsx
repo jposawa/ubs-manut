@@ -32,7 +32,7 @@ export const ListaProdutosUbs = () => {
       }
     })
       .then(response => {
-        setDadosUbs(response.data);
+        setDadosUbs(response.data[0]);
         // console.log(response.data);
         axios.get(URL_PRODUTOS, {
           params: {
@@ -42,7 +42,7 @@ export const ListaProdutosUbs = () => {
         })
           .then(response => {
             setDadosProdutosUbs(response.data);
-          //  console.log(response.data);
+            //  console.log(response.data);
             setLoading(false);
           })
           .catch(error => {
@@ -81,48 +81,38 @@ export const ListaProdutosUbs = () => {
 
   return (
     <>
-      <ul className="containerInputs">
+      <h3>
+        Produtos/Itens: {dadosUbs.nome}
+      </h3>
+      <ul className="listaPrincipal">
         {
-          dadosUbs.map((opc) => {
+          dadosProdutosUbs.map((prod) => {
             return (
-              <li key={opc.id}>
+              <li key={prod.ordem}>
                 <p>
-                  <div className="titManutProdUbs">Produtos/Itens: {opc.nome}</div>
+                  {prod.ordem} - {prod.descricao} {prod.marca} {prod.modelo} {prod.referencia}
                 </p>
-                <ul>
-                  {
-                    dadosProdutosUbs.map((prod) => {
-                      return (
-                        <li key={prod.ordem}>
-                          <p>
-                            {prod.ordem} - {prod.descricao} {prod.marca} {prod.modelo} {prod.referencia}
-                          </p>
-                          <p>
-                            <b>{'Ambiente:'}</b><i> {prod.ambiente}</i>
-                          </p>
-                          <p>
-                            {nivelAcesso >= 9 ? (
-                              <Popconfirm
-                                title="Excluir Produto da UBS"
-                                description="Confirma exclusão ?"
-                                onConfirm={() => {
-                                  excluirProdutoUbs(prod.id)
-                                }}
-                                okText="Sim"
-                                cancelText="Não"
-                              >
-                                <button type="button">
-                                  <DeleteOutlined className="iconeDel" />
-                                  Excluir
-                                </button>
-                              </Popconfirm>
-                            ) : null}
-                          </p>
-                        </li>
-                      )
-                    })
-                  }
-                </ul>
+                <p>
+                  <b>{'Ambiente:'}</b><i> {prod.ambiente}</i>
+                </p>
+                <p>
+                  {nivelAcesso >= 9 ? (
+                    <Popconfirm
+                      title="Excluir Produto da UBS"
+                      description="Confirma exclusão ?"
+                      onConfirm={() => {
+                        excluirProdutoUbs(prod.id)
+                      }}
+                      okText="Sim"
+                      cancelText="Não"
+                    >
+                      <button type="button">
+                        <DeleteOutlined className="iconeDel" />
+                        Excluir
+                      </button>
+                    </Popconfirm>
+                  ) : null}
+                </p>
               </li>
             )
           })
