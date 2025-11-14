@@ -5,10 +5,13 @@ import { URL_OS } from '../compartilhados/constantes';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { dataAtual, dataDoBanco, formatarValor } from '../compartilhados/funcoes';
+import './EstiloGeral.css';
 
 export const ImprimeOS = () => {
   const { id } = useParams();
   const [dadosImprimirOS, setDadosImprimirOS] = React.useState([]);
+  const [dadosServicosOS, setDadosServicosOS] = React.useState([]);
+  const [dadosPecasOS, setDadosPecasOS] = React.useState([]);
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   if (!usuarioSessao) {
@@ -24,11 +27,36 @@ export const ImprimeOS = () => {
       }
     }).then((resposta) => {
       setDadosImprimirOS(resposta.data);
+    }).catch((erro) => {
+      toast.error('Nenhum movimento encontrado !');
+    })
+
+    axios.get(URL_OS, {
+      params: {
+        opc: 'buscaDadosServicosOS',
+        idOS: id,
+        status: 'A'
+      }
+    }).then((resposta) => {
+      setDadosServicosOS(resposta.data);
       console.log(resposta.data);
     }).catch((erro) => {
       toast.error('Nenhum movimento encontrado !');
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    axios.get(URL_OS, {
+      params: {
+        opc: 'buscaDadosPecasOS',
+        idOS: id,
+        status: 'A'
+      }
+    }).then((resposta) => {
+      setDadosPecasOS(resposta.data);
+      console.log(resposta.data);
+    }).catch((erro) => {
+      toast.error('Nenhum movimento encontrado !');
+    })
+
   }, []);
 
   /// variaveis comuns para cabecalho, corpo e rodape
@@ -39,18 +67,19 @@ export const ImprimeOS = () => {
   let lin = 47;
   let nPag = 0;
   //////////////////////////////////////////
-  const geraPDF = () => {
+  const geraPDF_OS = () => {
     ///    inicia propriamente o relatorio PDF
-    cabPDF();
+    cabOS_PDF();
     dadosImprimirOS.map((opc) => {
       lin = lin + 6;
       if (lin > 255) {
         lin = 47;
         doc.addPage();
-        cabPDF();
+        cabOS_PDF();
       }
 
       return (
+        <>
         <li key={opc.id}>
           {doc.setFillColor('#87CEEB')}
           {doc.rect(5.1, 31.1, 199.8, 5.8, 'F')}
@@ -106,26 +135,48 @@ export const ImprimeOS = () => {
           {doc.setFont("helvetica", "bold")}
           {doc.text('Serviço(s) realizado(s):', 8, 79)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.servicoRealizado, 50, 79)}
+          {doc.text('Cod.Interno', 50, 79)}
+          {doc.text('Descrição do serviço', 70, 79)}
+          {doc.text('Valor', 170, 79)}
+          {dadosPecasOS.map((ser) => {
+            lin = lin + 6;
+            if (lin > 255) {
+              lin = 47;
+              doc.addPage();
+              cabOS_PDF();
+            }
+            else {
+              lin = 84;
+            }
+            return (
+              <li key={ser.id}>
+                {doc.text(ser.codigoInterno, 50, lin)}
+                {doc.text(ser.pecaServico, 70, lin)}
+                {doc.text(ser.valorCobrado, 170, lin)}
+                {incrementaLinha(10)}
+              </li>
+            )
+          }
+          )}
 
-          {doc.line(5, 96, 205, 96)}
+          {doc.line(5, lin, 205, lin)}
 
           {doc.setFont("helvetica", "bold")}
           {doc.text('Peça(s) substituída(s) e/ou reparada(s):', 8, 101)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.pecaSubstReparada, 78, 101)}
+          {/*doc.text(opc.pecaSubstReparada, 78, 101)*/}
 
           {doc.line(5, 119, 205, 119)}
 
           {doc.setFont("helvetica", "bold")}
           {doc.text('Valor do(s) serviço(s): R$', 8, 124)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.valorServico, 55, 124)}
+          {/*doc.text(opc.valorServico, 55, 124)*/}
 
           {doc.setFont("helvetica", "bold")}
           {doc.text('Valor da(s) peça(s): R$', 80, 124)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.valorPecas, 122, 124)}
+          {/*doc.text(opc.valorPecas, 122, 124)*/}
 
           {doc.line(5, 127, 205, 127)}
 
@@ -134,7 +185,7 @@ export const ImprimeOS = () => {
           {doc.setFont("helvetica", "bold")}
           {doc.text('TOTAL DA O.S.: R$', 8, 132)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.totalOS, 43, 132)}
+          {doc.text(opc.valorTotalOs, 43, 132)}
 
           {doc.line(5, 135, 205, 135)}
 
@@ -163,12 +214,18 @@ export const ImprimeOS = () => {
 
           {doc.text('Responsável pelas manutenções nas UBS', 124, 285)}
         </li >
+        </>
       )
     })
     doc.save(nomeArquivo);
   }
 
-  const cabPDF = () => {
+  const incrementaLinha = (somar) => {
+    lin = lin + somar;
+    return(lin);
+  }
+  
+  const cabOS_PDF = () => {
     doc.setDisplayMode('fullwidth', 'single');
     doc.setDrawColor(0, 10, 0) // bordas e lines cinza
     //doc.setPage();
@@ -205,27 +262,25 @@ export const ImprimeOS = () => {
      doc.setFontSize(12);
      doc.setFont("helvetica", "bold");
      doc.line(5, 43, 205, 43);//col,lin,col,lin
-     { doc.setFillColor('#87CEEB') }
-     { doc.rect(5.1, lin - 3.9, 199.8, 5.8, 'F') }
-     doc.text('Dia', 6, 41);
-     doc.text('Descrição do lançamento', 14, 41);
-     doc.text('Complemento', 90, 41);
-     doc.text('Débito', 165, 41);
-     doc.text('Crédito', 189, 41);
-     doc.line(13, 37, 13, 43);
-     doc.line(89, 37, 89, 43);
-     doc.line(157, 37, 157, 43);
-     doc.line(179, 37, 179, 43);
-     doc.setFont("helvetica", "normal");
-     */
+     {doc.setFillColor('#87CEEB')}
+          {doc.rect(5.1, lin - 3.9, 199.8, 5.8, 'F')}
+          doc.text('Dia', 6, 41);
+          doc.text('Descrição do lançamento', 14, 41);
+          doc.text('Complemento', 90, 41);
+          doc.text('Débito', 165, 41);
+          doc.text('Crédito', 189, 41);
+          doc.line(13, 37, 13, 43);
+          doc.line(89, 37, 89, 43);
+          doc.line(157, 37, 157, 43);
+          doc.line(179, 37, 179, 43);
+          doc.setFont("helvetica", "normal");
+          */
   }
 
   return (
     <>
-      <div className='titGerarPDF'>
-        <h3>Gerar Arquivo PDF</h3>
-      </div>
-      <div className='containerGerarPDF'>
+      <h2>Gerar Arquivo PDF da O.S.</h2>
+      <div className='containerGerarPDF_OS'>
         <p>
           Ao confirmar será gerado um arquivo no formato PDF com a Ordem de Serviço selecionada.
         </p>
@@ -233,12 +288,12 @@ export const ImprimeOS = () => {
           A impressão irá depender do aplicativo instalado em seu aparelho  para tal função.
         </p>
       </div>
-      <div>
+      <div className='menuRodapePaginas'>
         <Link to='/servicossolicitados'>
-          <button className='menuRodapePaginas' type="reset" >Cancelar
+          <button className='botoesMenuRodape' type="reset" >Cancelar
           </button>
         </Link>
-        <button className='menuRodapePaginas' type="button" onClick={geraPDF}>Confirmar PDF
+        <button className='botoesMenuRodape' type="button" onClick={geraPDF_OS}>Gerar PDF
         </button>
       </div>
     </>

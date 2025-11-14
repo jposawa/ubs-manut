@@ -19,12 +19,13 @@ export const ListaTerceirizadas = () => {
     navigate('/login');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
+  const idTerc = usuarioSessao.idTerceirizada;
   const buscarDadosTerceirizadas = () => {
     setLoading(true);
     axios.get(URL_TERCEIRIZADAS, {
       params: {
         opc: 'buscaDadosTerceirizadas',
-        idTerc: '',
+        idTerc: idTerc,
       }
     })
       .then(response => {
@@ -108,7 +109,7 @@ export const ListaTerceirizadas = () => {
                       ) : null}
                     </p>
                     <p>
-                      {nivelAcesso >= 9 ? (
+                      {nivelAcesso >= 9 || nivelAcesso == 5 ? (
                         <Link to={`/cadaltterceirizadas/${opc.id}`}>
                           <button type="button">
                             <FormOutlined className="icone" />
@@ -135,11 +136,13 @@ export const ListaTerceirizadas = () => {
             Retornar
           </button>
         </Link>
-        <Link to='../cadaltterceirizadas'>
-          <button type="button" className='botoesMenuRodape'>
-            Cadastra Terceirizada
-          </button>
-        </Link>
+        {nivelAcesso >= 9 ? (
+          <Link to='../cadaltterceirizadas'>
+            <button type="button" className='botoesMenuRodape'>
+              Cadastra Terceirizada
+            </button>
+          </Link>
+        ) : null}
       </div>
     </>
   )

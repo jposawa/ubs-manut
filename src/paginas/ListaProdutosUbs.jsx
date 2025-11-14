@@ -82,7 +82,7 @@ export const ListaProdutosUbs = () => {
   return (
     <>
       <h3>
-        Produtos/Itens: {dadosUbs.nome}
+        Produtos/Itens da {dadosUbs.nome}
       </h3>
       <ul className="listaPrincipal">
         {
@@ -98,7 +98,7 @@ export const ListaProdutosUbs = () => {
                 <p>
                   {nivelAcesso >= 9 ? (
                     <Popconfirm
-                      title="Excluir Produto da UBS"
+                      title="Excluir Item desta UBS"
                       description="Confirma exclusão ?"
                       onConfirm={() => {
                         excluirProdutoUbs(prod.id)

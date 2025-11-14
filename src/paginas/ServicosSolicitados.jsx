@@ -20,12 +20,14 @@ export const ServicosSolicitados = () => {
     navigate('/menuprincipal');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
+  const idTerceirizada = usuarioSessao.idTerceirizada;
   const buscarDadosServicosSol = () => {
     setLoading(true);
     axios.get(URL_OS, {
       params: {
         opc: 'buscaDadosServicosSol',
-        status: 'A'
+        status: 'A',
+        idTerc: idTerceirizada
       }
     })
       .then(response => {
@@ -106,7 +108,7 @@ export const ServicosSolicitados = () => {
                     ) : null}
                   </p>
                   <p>
-                    {nivelAcesso >= 9 ? (
+                    {nivelAcesso == 10 || nivelAcesso == 5 ? (
                       <Link to={`/fecharos/${opc.id}`}>
                         <button type="button">
                           <CheckCircleOutlined className="icone" />
@@ -116,7 +118,7 @@ export const ServicosSolicitados = () => {
                     ) : null}
                   </p>
                   <p>
-                    {nivelAcesso >= 9 ? (
+                    {nivelAcesso >= 9 || nivelAcesso == 5 ? (
                       <Link to={`/imprimeos/${opc.id}`}>
                         <button type="button">
                           <PrinterOutlined className="icone" />
