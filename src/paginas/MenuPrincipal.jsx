@@ -10,7 +10,7 @@ export const MenuPrincipal = () => {
   // const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
-  const nivelAcesso = usuarioSessao.nivelAcesso;
+  const nivelAcesso = usuarioSessao?.nivelAcesso;
 
   React.useEffect(() => {
     //  const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))

@@ -26,7 +26,7 @@ export const ImprimeOS = () => {
         status: 'A'
       }
     }).then((resposta) => {
-      setDadosImprimirOS(resposta.data);
+      setDadosImprimirOS(resposta?.data ?? []);
     }).catch((erro) => {
       toast.error('Nenhum movimento encontrado !');
     })
@@ -38,7 +38,7 @@ export const ImprimeOS = () => {
         status: 'A'
       }
     }).then((resposta) => {
-      setDadosServicosOS(resposta.data);
+      setDadosServicosOS(resposta?.data ?? []);
       console.log(resposta.data);
     }).catch((erro) => {
       toast.error('Nenhum movimento encontrado !');
@@ -79,8 +79,7 @@ export const ImprimeOS = () => {
       }
 
       return (
-        <>
-        <li key={opc.id}>
+        <div key={opc.id}>
           {doc.setFillColor('#87CEEB')}
           {doc.rect(5.1, 31.1, 199.8, 5.8, 'F')}
           {doc.setFontSize(10)}
@@ -138,7 +137,7 @@ export const ImprimeOS = () => {
           {doc.text('Cod.Interno', 50, 79)}
           {doc.text('Descrição do serviço', 70, 79)}
           {doc.text('Valor', 170, 79)}
-          {dadosPecasOS.map((ser) => {
+          {dadosPecasOS.map((ser, indicePeca) => {
             lin = lin + 6;
             if (lin > 255) {
               lin = 47;
@@ -146,23 +145,24 @@ export const ImprimeOS = () => {
               cabOS_PDF();
             }
             else {
-              lin = 84;
+              lin = 84 + (indicePeca * 5);
             }
             return (
-              <li key={ser.id}>
+              <p key={ser.id}>
                 {doc.text(ser.codigoInterno, 50, lin)}
                 {doc.text(ser.pecaServico, 70, lin)}
                 {doc.text(ser.valorCobrado, 170, lin)}
-                {incrementaLinha(10)}
-              </li>
+              </p>
             )
           }
           )}
 
-          {doc.line(5, lin, 205, lin)}
+          {doc.line(5, lin + dadosPecasOS.length + 5, 205, lin + dadosPecasOS.length + 5)}
 
-          {doc.setFont("helvetica", "bold")}
-          {doc.text('Peça(s) substituída(s) e/ou reparada(s):', 8, 101)}
+          {/* {doc.setFont("helvetica", "bold")} */}
+          {doc.text('Peça(s) substituída(s) e/ou reparada(s):', 8, 101, {
+            color: "#00ffff"
+          })}
           {doc.setFont("helvetica", "normal")}
           {/*doc.text(opc.pecaSubstReparada, 78, 101)*/}
 
@@ -213,8 +213,7 @@ export const ImprimeOS = () => {
           {doc.text(opc.fantasiaTerc, 22, 285)}
 
           {doc.text('Responsável pelas manutenções nas UBS', 124, 285)}
-        </li >
-        </>
+        </div >
       )
     })
     doc.save(nomeArquivo);
