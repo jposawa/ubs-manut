@@ -1,3 +1,5 @@
+export * from "./unidades";
+
 export const LOGO_UBS = 'src/imagens/UBSLogo1.png';
 export const URL_FOTOS_UBS = 'https://datasystem-ce.com.br/ubsManut/fotos/';
 export const URL_LOGIN_UBS = 'https://datasystem-ce.com.br/ubsManut/api_ubs_login.php';

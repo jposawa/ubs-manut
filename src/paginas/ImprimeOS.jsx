@@ -62,7 +62,6 @@ export const ImprimeOS = () => {
   /// variaveis comuns para cabecalho, corpo e rodape
   const doc = new jsPDF('p', 'mm', 'a4');
 
-  const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   const nomeArquivo = 'UBSmanut_OS' + id + '.pdf';
   let lin = 0;
   let nPag = 0;
@@ -83,10 +82,12 @@ export const ImprimeOS = () => {
     const totalPecas = totalPec.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const subTotal = (totalSer + totalPec);
-    const totalOs = subTotal; // - Number(dadosImprimirOS.desconto);
-    console.log(dadosImprimirOS.desconto);
-    const ssubTotal = subTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const ttotalOs = totalOs.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const totalOs = subTotal - Number(dadosImprimirOS?.[0]?.desconto ?? 0);
+    console.log({
+      totalOs,
+      subTotal,
+      dadosImprimirOS,
+    });
   //////////////////////////////////////////
   const geraPDF_OS = () => {
     ///    inicia propriamente o relatorio PDF
@@ -192,13 +193,13 @@ export const ImprimeOS = () => {
           {doc.setFont("helvetica", "bold")}
           {lin = incrementaLinha(5)}
           {doc.text('SUB-TOTAL: R$', 140, lin)}
-          {doc.text(ssubTotal, 200, lin, 0, 0, 'right')}
+          {doc.text(`${subTotal}`, 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(5)}
           {doc.text('DESCONTO: R$', 140, lin)}
           {doc.text(opc.desconto, 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(7)}
           {doc.text('TOTAL DA O.S.: R$', 134, lin)}
-          {doc.text(ttotalOs, 200, lin, 0, 0, 'right')}
+          {doc.text(`${totalOs}`, 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(5)}
           {doc.line(5, lin, 205, lin)}
           {lin = incrementaLinha(5)}
