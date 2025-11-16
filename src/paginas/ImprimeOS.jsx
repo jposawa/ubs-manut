@@ -15,7 +15,7 @@ export const ImprimeOS = () => {
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   if (!usuarioSessao) {
-    navigate('/servicossolicitados');
+    navigate('/login');
   }
   const nivelAcesso = usuarioSessao.nivelAcesso;
   React.useEffect(() => {
@@ -64,167 +64,194 @@ export const ImprimeOS = () => {
 
   const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   const nomeArquivo = 'UBSmanut_OS' + id + '.pdf';
-  let lin = 47;
+  let lin = 0;
   let nPag = 0;
+  let larguraMaxTexto = 192;
+  let textoObs = '';
+  let textoGestor = '';
+  let qtdLinhas = 0;
+  const totalSer = dadosServicosOS.reduce((valorAtual, item) => {
+      valorAtual += Number(item.valorCobrado);
+      return valorAtual
+    }, 0)
+    const totalServicos = totalSer.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const totalPec = dadosPecasOS.reduce((valorAtual, item) => {
+      valorAtual += Number(item.valorCobrado);
+      return valorAtual
+    }, 0)
+    const totalPecas = totalPec.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const subTotal = (totalSer + totalPec);
+    const totalOs = subTotal; // - Number(dadosImprimirOS.desconto);
+    console.log(dadosImprimirOS.desconto);
+    const ssubTotal = subTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const ttotalOs = totalOs.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   //////////////////////////////////////////
   const geraPDF_OS = () => {
     ///    inicia propriamente o relatorio PDF
     cabOS_PDF();
     dadosImprimirOS.map((opc) => {
-      lin = lin + 6;
-      if (lin > 255) {
-        lin = 47;
-        doc.addPage();
-        cabOS_PDF();
-      }
-
       return (
         <div key={opc.id}>
-          {doc.setFillColor('#87CEEB')}
-          {doc.rect(5.1, 31.1, 199.8, 5.8, 'F')}
           {doc.setFontSize(10)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Ordem de Serviço:', 8, 35)}
+          {doc.text('Ordem de Serviço:', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.id.toString().padStart(6, '0'), 41, 35)}
+          {doc.text(opc.id.toString().padStart(6, '0'), 41, lin)}
 
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Data de abertura:', 65, 35)}
+          {doc.text('Data de abertura:', 65, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(dataDoBanco(opc.dataAberturaOS), 95, 35)}
+          {doc.text(dataDoBanco(opc.dataAberturaOS), 95, lin)}
 
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Data de fechamento:', 125, 35)}
+          {doc.text('Data de fechamento:', 125, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(dataDoBanco(opc.dataFechamentoOS), 161, 35)}
-
-          {doc.line(5, 37, 205, 37)}
-
+          {doc.text(dataDoBanco(opc.dataFechamentoOS), 161, lin)}
+          {lin = incrementaLinha(2)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(4)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Nome UBS: ', 8, 41)}
+          {doc.text('Unidade atendida: ', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.nomeUbs, 30, 41)}
-
-          {doc.line(5, 43, 205, 43)}
-
+          {doc.text(opc.nomeUbs, 41, lin)}
+          {lin = incrementaLinha(2)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Produto/Item : ', 8, 48)}
+          {doc.text('Produto/Item : ', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.descricao + ' ' + opc.marca + ' ' + opc.modelo + ' ' + opc.referencia, 34, 48)}
-
+          {doc.text(opc.descricao + ' ' + opc.marca + ' ' + opc.modelo + ' ' + opc.referencia, 34, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Ambiente Instalado: ', 8, 53)}
+          {doc.text('Ambiente Instalado: ', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.ambienteInstalado, 44, 53)}
-
+          {doc.text(opc.ambienteInstalado, 44, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Defeito(s) apresentado(s): ', 8, 58)}
+          {doc.text('Defeito(s) apresentado(s): ', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.defeitoApres, 55, 58)}
-
-          {doc.line(5, 68, 205, 68)}
-
+          {doc.text(opc.defeitoApres, 55, lin)}
+          {lin = incrementaLinha(10)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(4)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Solicitante:', 8, 72)}
+          {doc.text('Solicitante:', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.nomeSolicitante, 30, 72)}
-
-          {doc.line(5, 74, 205, 74)}
-
+          {doc.text(opc.nomeSolicitante, 30, lin)}
+          {lin = incrementaLinha(2)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Serviço(s) realizado(s):', 8, 79)}
+          {doc.text('Serviço(s) realizado(s):', 8, lin)}
+          {doc.text('Cod.Interno', 50, lin)}
+          {doc.text('Descrição', 75, lin)}
+          {doc.text('Valor', 192, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text('Cod.Interno', 50, 79)}
-          {doc.text('Descrição do serviço', 70, 79)}
-          {doc.text('Valor', 170, 79)}
-          {dadosPecasOS.map((ser, indicePeca) => {
-            lin = lin + 6;
-            if (lin > 255) {
-              lin = 47;
-              doc.addPage();
-              cabOS_PDF();
-            }
-            else {
-              lin = 84 + (indicePeca * 5);
-            }
+          {lin = incrementaLinha(5)}
+          {dadosServicosOS.map((ser, indiceSer) => {
+            lin = incrementaLinha(indiceSer * 5);
             return (
               <p key={ser.id}>
-                {doc.text(ser.codigoInterno, 50, lin)}
-                {doc.text(ser.pecaServico, 70, lin)}
-                {doc.text(ser.valorCobrado, 170, lin)}
+                {doc.text(ser.codigoInterno, 70, lin, 0, 0, 'right')}
+                {doc.text(ser.pecaServico, 75, lin)}
+                {doc.text(ser.valorCobrado, 200, lin, 0, 0, 'right')}
               </p>
             )
           }
           )}
-
-          {doc.line(5, lin + dadosPecasOS.length + 5, 205, lin + dadosPecasOS.length + 5)}
-
-          {/* {doc.setFont("helvetica", "bold")} */}
-          {doc.text('Peça(s) substituída(s) e/ou reparada(s):', 8, 101, {
-            color: "#00ffff"
-          })}
-          {doc.setFont("helvetica", "normal")}
-          {/*doc.text(opc.pecaSubstReparada, 78, 101)*/}
-
-          {doc.line(5, 119, 205, 119)}
-
+          {lin = incrementaLinha((dadosServicosOS.length + 5))}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Valor do(s) serviço(s): R$', 8, 124)}
-          {doc.setFont("helvetica", "normal")}
-          {/*doc.text(opc.valorServico, 55, 124)*/}
-
+          {doc.text('Valor total do(s) serviço(s): R$', 8, lin)}
+          {doc.text(totalServicos, 200, lin, 0, 0, 'right')}
+          {lin = incrementaLinha(5)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Valor da(s) peça(s): R$', 80, 124)}
+          {doc.text('Peça(s) substituída(s):', 8, lin)}
+          {/*lin = incrementaLinha(5)*/}
           {doc.setFont("helvetica", "normal")}
-          {/*doc.text(opc.valorPecas, 122, 124)*/}
-
-          {doc.line(5, 127, 205, 127)}
-
-          {doc.setFillColor('#87CEEB')}
-          {doc.rect(5.1, 127.1, 199.8, 7.8, 'F')}
+          {dadosPecasOS.map((pec, indicePec) => {
+            lin = lin + (indicePec * 5);
+            return (
+              <p key={pec.id}>
+                {doc.text(pec.codigoInterno, 70, lin, 0, 0, 'right')}
+                {doc.text(pec.pecaServico, 75, lin)}
+                {doc.text(pec.valorCobrado, 200, lin, 0, 0,'right')}
+              </p>
+            )
+          }
+          )}
+          {lin = incrementaLinha((dadosPecasOS.length + 5))}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('TOTAL DA O.S.: R$', 8, 132)}
-          {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.valorTotalOs, 43, 132)}
-
-          {doc.line(5, 135, 205, 135)}
-
+          {doc.text('Valor total da(s) peça(s): R$', 8, lin)}
+          {doc.text(totalPecas, 200, lin, 0, 0, 'right')}
+          {lin = incrementaLinha(5)}
+          {doc.line(5, lin, 205, lin)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Observação:', 8, 140)}
-          {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.obs, 32, 140)}
-
-          {doc.line(5, 157, 205, 157)}
-
+          {lin = incrementaLinha(5)}
+          {doc.text('SUB-TOTAL: R$', 140, lin)}
+          {doc.text(ssubTotal, 200, lin, 0, 0, 'right')}
+          {lin = incrementaLinha(5)}
+          {doc.text('DESCONTO: R$', 140, lin)}
+          {doc.text(opc.desconto, 200, lin, 0, 0, 'right')}
+          {lin = incrementaLinha(7)}
+          {doc.text('TOTAL DA O.S.: R$', 134, lin)}
+          {doc.text(ttotalOs, 200, lin, 0, 0, 'right')}
+          {lin = incrementaLinha(5)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('Status:', 8, 162)}
+          {doc.text('Observação:', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text('"' + opc.statusOS + '"', 22, 162)}
-
+          {lin = incrementaLinha(5)}
+          {textoObs = doc.splitTextToSize(opc.obs, larguraMaxTexto)}
+          {qtdLinhas = textoObs.length}
+          {doc.text(textoObs, 8, lin)}
+          {lin = incrementaLinha((qtdLinhas * 4) + 5)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
-          {doc.text('(A) Aberta    -    (F) Fechada', 40, 162)}
-
-          {doc.line(5, 165, 205, 165)}
+          {doc.text('Status:', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text('Parecer do responsável pelas manutenções nas UBS:', 8, 170)}
-
+          {doc.text('"' + opc.statusOS + '"', 22, lin)}
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('(A) Aberta    -    (F) Fechada', 40, lin)}
+          {lin = incrementaLinha(3)}
+          {doc.line(5, lin, 205, lin)}
+          {lin = incrementaLinha(5)}
+          {doc.setFont("helvetica", "bold")}
+          {doc.text('Parecer do responsável pelas manutenções nas UBS:', 8, lin)}
           {doc.setFont("helvetica", "normal")}
-          {doc.text(opc.razaoTerc, 22, 280)}
-          {doc.text(opc.fantasiaTerc, 22, 285)}
+          {lin = incrementaLinha(5)}
+          {textoGestor = doc.splitTextToSize(opc.parecerGestor, larguraMaxTexto)}
+          {qtdLinhas = textoGestor.length}
+          {doc.text(textoGestor, 8, lin)}
+          {lin = incrementaLinha((qtdLinhas * 4) + 15)}
+          {doc.setFont("helvetica", "normal")}
+          {doc.text(opc.razaoTerc, 22, lin)}
+          {lin = incrementaLinha(5)}
+          {doc.text(opc.fantasiaTerc, 22, lin)}
 
-          {doc.text('Responsável pelas manutenções nas UBS', 124, 285)}
+          {doc.text('Responsável pelas manutenções nas UBS', 124, lin)}
         </div >
       )
     })
     doc.save(nomeArquivo);
   }
 
-  const incrementaLinha = (somar) => {
-    lin = lin + somar;
-    return(lin);
+  const incrementaLinha = (vlr) => {
+    lin = lin + vlr;
+    if (lin > 255) {
+      doc.addPage();
+      cabOS_PDF();
+    }
+    return (lin);
   }
-  
+
   const cabOS_PDF = () => {
+    lin = 0;
     doc.setDisplayMode('fullwidth', 'single');
     doc.setDrawColor(0, 10, 0) // bordas e lines cinza
     //doc.setPage();
@@ -237,43 +264,20 @@ export const ImprimeOS = () => {
     doc.text('Impresso em ' + dataAtual() + ' por Sistemas Web - (11) 9 6769-3975 - Eduardo - Todos os Direitos Reservados.', 55, 293);
     doc.text('Página: ' + nPag, 190, 293);
     ////// fim rodape
-    //    doc.rect(5, 5, 38, 32);
-    //    doc.addImage('imagens/UBSIcone.JPG', "JPEG", 6, 6, 120, 100);
-
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    doc.text('Prefeitura Municipal de Iguatu-CE', 66, 12);
+    lin = incrementaLinha(11);
+    doc.text('Prefeitura Municipal de Iguatu-CE', 66, lin);
     doc.setFontSize(12);
-    doc.text('Controle de Manutenções em Unidades Básicas de Saúde', 47, 20);
+    lin = incrementaLinha(8);
+    doc.text('Controle de Manutenções em Unidades Básicas de Saúde', 47, lin);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
-
-    doc.text('Iguatu-CE', 94, 26);
-
-    //    doc.rect(167, 5, 38, 32);
-    //doc.addImage('Logo da Prefeitura', 174, 6, 30, 30);
-    doc.line(5, 31, 205, 31);
-    // doc.setFontSize(10);
-    /*  doc.text('Conta: ' + [nomeConta], 37, 35);
-      doc.text('Mês: ' + [mesSel], 152, 35);
-      */
-    /*
-     doc.setFontSize(12);
-     doc.setFont("helvetica", "bold");
-     doc.line(5, 43, 205, 43);//col,lin,col,lin
-     {doc.setFillColor('#87CEEB')}
-          {doc.rect(5.1, lin - 3.9, 199.8, 5.8, 'F')}
-          doc.text('Dia', 6, 41);
-          doc.text('Descrição do lançamento', 14, 41);
-          doc.text('Complemento', 90, 41);
-          doc.text('Débito', 165, 41);
-          doc.text('Crédito', 189, 41);
-          doc.line(13, 37, 13, 43);
-          doc.line(89, 37, 89, 43);
-          doc.line(157, 37, 157, 43);
-          doc.line(179, 37, 179, 43);
-          doc.setFont("helvetica", "normal");
-          */
+    lin = incrementaLinha(6);
+    doc.text('Iguatu-CE', 94, lin);
+    lin = incrementaLinha(6);
+    doc.line(5, lin, 205, lin);
+    lin = 36;
   }
 
   return (
