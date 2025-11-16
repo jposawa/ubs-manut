@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { useRecoilValue } from 'recoil'
-import { usuarioLogadoAtom } from './compartilhados/estados/index.jsx'
+import { usuarioLogadoAtom } from './compartilhados/estados'
 import { RotasUrl } from './paginas/RotasUrl.jsx'
 import { useNavigate } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'

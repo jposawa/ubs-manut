@@ -83,12 +83,7 @@ export const ImprimeOS = () => {
 
     const subTotal = (totalSer + totalPec);
     const totalOs = subTotal - Number(dadosImprimirOS?.[0]?.desconto ?? 0);
-    console.log({
-      totalOs,
-      subTotal,
-      dadosImprimirOS,
-    });
-  //////////////////////////////////////////
+
   const geraPDF_OS = () => {
     ///    inicia propriamente o relatorio PDF
     cabOS_PDF();
@@ -193,13 +188,13 @@ export const ImprimeOS = () => {
           {doc.setFont("helvetica", "bold")}
           {lin = incrementaLinha(5)}
           {doc.text('SUB-TOTAL: R$', 140, lin)}
-          {doc.text(`${subTotal}`, 200, lin, 0, 0, 'right')}
+          {doc.text(subTotal.toFixed(2), 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(5)}
           {doc.text('DESCONTO: R$', 140, lin)}
           {doc.text(opc.desconto, 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(7)}
           {doc.text('TOTAL DA O.S.: R$', 134, lin)}
-          {doc.text(`${totalOs}`, 200, lin, 0, 0, 'right')}
+          {doc.text(totalOs.toFixed(2), 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(5)}
           {doc.line(5, lin, 205, lin)}
           {lin = incrementaLinha(5)}
