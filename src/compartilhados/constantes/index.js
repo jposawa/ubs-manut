@@ -7,6 +7,8 @@ export const URL_TERCEIRIZADAS = 'https://datasystem-ce.com.br/ubsManut/api_ubs_
 export const URL_UBS = 'https://datasystem-ce.com.br/ubsManut/api_ubs_cadastros_ubs.php';
 export const URL_OS = "https://datasystem-ce.com.br/ubsManut/api_ubs_os.php";
 export const URL_PRODUTOS = "https://datasystem-ce.com.br/ubsManut/api_ubs_produtos.php";
+export const URL_PECAS = "https://datasystem-ce.com.br/ubsManut/api_ubs_pecas.php";
+export const URL_SERVICOS = "https://datasystem-ce.com.br/ubsManut/api_ubs_servicos.php";
 
 export const SITUACAO_USUARIOS = {
   ATIVO: "A",

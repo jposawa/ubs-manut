@@ -14,6 +14,10 @@ import { GerarOs } from "./GerarOs";
 import { ServicosSolicitados } from "./ServicosSolicitados";
 import { FecharOs } from "./FecharOs";
 import { ImprimeOS } from "./ImprimeOS";
+import { ListaPecas } from "./ListaPecas";
+import { CadAltPecas } from "./cadAltPecas";
+import { ListaServicos } from "./ListaServicos";
+import { CadAltServicos } from "./cadAltServicos";
 
 export const RotasUrl = () => {
   return(
@@ -62,6 +66,24 @@ export const RotasUrl = () => {
       } />
        <Route path="cadastraprodutosubs/:id" exact element = {
         <CadastraProdutosUbs/>
+      } />
+      <Route path="listapecas" exact element = {
+        <ListaPecas/>
+      } />
+      <Route path="cadaltpecas" exact element = {
+        <CadAltPecas/>
+      } />
+      <Route path="cadaltpecas/:id" exact element = {
+        <CadAltPecas/>
+      } />
+      <Route path="listaservicos" exact element = {
+        <ListaServicos/>
+      } />
+      <Route path="cadaltservicos" exact element = {
+        <CadAltServicos/>
+      } />
+       <Route path="cadaltservicos/:id" exact element = {
+        <CadAltServicos/>
       } />
        <Route path="geraros" exact element = {
         <GerarOs/>

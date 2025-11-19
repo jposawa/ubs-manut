@@ -11,7 +11,12 @@ export const MenuPrincipal = () => {
   const navigate = useNavigate();
   const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'));
   const nivelAcesso = usuarioSessao?.nivelAcesso;
-
+  const idTerceirizada = usuarioSessao?.idTerceirizada;
+  let capiton = 'Terceirizadas';
+  if (idTerceirizada > 0)
+  {
+    capiton = 'Dados da Empresa';
+  }
   React.useEffect(() => {
     //  const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
     if (!usuarioSessao) {
@@ -49,7 +54,7 @@ export const MenuPrincipal = () => {
           </button>
         </Link>
         {nivelAcesso == 5 || nivelAcesso == 10 ? (
-          <Link to=''>
+          <Link to='/listapecas'>
             <button type="button" className='botaoMenu'>
               <Icone
                 elementoIcone={<ProductOutlined />}
@@ -59,7 +64,7 @@ export const MenuPrincipal = () => {
           </Link>
         ) : null}
         {nivelAcesso == 5 || nivelAcesso == 10 ? (
-          <Link to=''>
+          <Link to='/listaservicos'>
             <button type="button" className='botaoMenu'>
               <Icone
                 elementoIcone={<SnippetsOutlined />}
@@ -93,7 +98,7 @@ export const MenuPrincipal = () => {
             <Icone
               elementoIcone={<SolutionOutlined />}
             />
-            <p>Terceirizadas</p>
+            <p>{capiton}</p>
           </button>
         </Link>
         {nivelAcesso >= 9 ? (

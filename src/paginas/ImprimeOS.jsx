@@ -17,7 +17,7 @@ export const ImprimeOS = () => {
   if (!usuarioSessao) {
     navigate('/login');
   }
-  const nivelAcesso = usuarioSessao.nivelAcesso;
+  const municipio = usuarioSessao.municipio + ' ' + usuarioSessao.uf;
   React.useEffect(() => {
     axios.get(URL_OS, {
       params: {
@@ -28,7 +28,7 @@ export const ImprimeOS = () => {
     }).then((resposta) => {
       setDadosImprimirOS(resposta?.data ?? []);
     }).catch((erro) => {
-      toast.error('Nenhum movimento encontrado !');
+      //toast.error('Nenhum movimento encontrado !');
     })
 
     axios.get(URL_OS, {
@@ -39,9 +39,9 @@ export const ImprimeOS = () => {
       }
     }).then((resposta) => {
       setDadosServicosOS(resposta?.data ?? []);
-      console.log(resposta.data);
+      //console.log(resposta.data);
     }).catch((erro) => {
-      toast.error('Nenhum movimento encontrado !');
+      //toast.error('Nenhum movimento encontrado !');
     })
 
     axios.get(URL_OS, {
@@ -52,9 +52,9 @@ export const ImprimeOS = () => {
       }
     }).then((resposta) => {
       setDadosPecasOS(resposta.data);
-      console.log(resposta.data);
+      //console.log(resposta.data);
     }).catch((erro) => {
-      toast.error('Nenhum movimento encontrado !');
+      //toast.error('Nenhum movimento encontrado !');
     })
 
   }, []);
@@ -141,9 +141,9 @@ export const ImprimeOS = () => {
           {lin = incrementaLinha(5)}
           {doc.setFont("helvetica", "bold")}
           {doc.text('Serviço(s) realizado(s):', 8, lin)}
-          {doc.text('Cod.Interno', 50, lin)}
+          {doc.text('Cod.Interno', 70, lin, 0, 0, 'right')}
           {doc.text('Descrição', 75, lin)}
-          {doc.text('Valor', 192, lin)}
+          {doc.text('Valor', 200, lin, 0, 0, 'right')}
           {doc.setFont("helvetica", "normal")}
           {lin = incrementaLinha(5)}
           {dadosServicosOS.map((ser, indiceSer) => {
@@ -193,8 +193,10 @@ export const ImprimeOS = () => {
           {doc.text('DESCONTO: R$', 140, lin)}
           {doc.text(opc.desconto, 200, lin, 0, 0, 'right')}
           {lin = incrementaLinha(7)}
+          {doc.setFontSize(12)}
           {doc.text('TOTAL DA O.S.: R$', 134, lin)}
           {doc.text(totalOs.toFixed(2), 200, lin, 0, 0, 'right')}
+          {doc.setFontSize(10)}
           {lin = incrementaLinha(5)}
           {doc.line(5, lin, 205, lin)}
           {lin = incrementaLinha(5)}
@@ -253,6 +255,7 @@ export const ImprimeOS = () => {
     //doc.setPage();
     doc.setLineWidth(0.1);
     doc.rect(5, 5, 200, 285);
+    
     //// faz o rodape
     //const tPag = doc.getNumberOfPages();// getPageInfo(1).pageNumber;
     nPag = doc.getNumberOfPages();
@@ -260,19 +263,23 @@ export const ImprimeOS = () => {
     doc.text('Impresso em ' + dataAtual() + ' por Sistemas Web - (11) 9 6769-3975 - Eduardo - Todos os Direitos Reservados.', 55, 293);
     doc.text('Página: ' + nPag, 190, 293);
     ////// fim rodape
+
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
-    lin = incrementaLinha(11);
-    doc.text('Prefeitura Municipal de Iguatu-CE', 66, lin);
+    lin = incrementaLinha(12);
+    doc.text('Prefeitura Municipal de ' + municipio, 66, lin);
     doc.setFontSize(12);
     lin = incrementaLinha(8);
     doc.text('Controle de Manutenções em Unidades Básicas de Saúde', 47, lin);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
     lin = incrementaLinha(6);
-    doc.text('Iguatu-CE', 94, lin);
+    doc.text(municipio, 94, lin);
     lin = incrementaLinha(6);
     doc.line(5, lin, 205, lin);
+    //doc.line(45, lin-27, 45, lin);
+    //doc.line(166, lin-27, 166, lin);
+    //doc.addImage('../imagens/UBSLogo.png', "PNG", 6, lin-26, 120, 150);
     lin = 36;
   }
 
