@@ -4,23 +4,25 @@ import { usuarioLogadoAtom } from '../compartilhados/estados'
 import { toast } from 'react-toastify'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
-import { URL_OS, URL_PRODUTOS, URL_TERCEIRIZADAS, URL_UBS } from '../compartilhados/constantes'
+import { URL_OS, URL_SERVICOS, URL_PECAS } from '../compartilhados/constantes'
 import { Input } from '../componentes'
 import { dataAtual, dataDoBanco, dataParaBanco, formatarValor } from '../compartilhados/funcoes'
 import { Select } from '@mantine/core'
 import './EstiloGeral.css'
+import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 export const FecharOs = () => {
   const { id } = useParams();
- // const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
+  // const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [dadosOs, defineDadosOs] = React.useState([]);
+  const [dadosServicosOS, defineDadosServicosOS] = React.useState([]);
+  const [dadosPecasOS, defineDadosPecasOS] = React.useState([]);
   const navigate = useNavigate();
-  const [dadosTerceirizada, defineDadosTerceirizada] = React.useState([]);
-  // const [idTec, setIdTec] = React.useState([]);
-  // const [opcoesTec, setOpcoesTec] = React.useState([]);
-  //const codMunic = usuarioLogado.codMunicipio;
+
+  const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
+  const idTerceirizada = usuarioSessao.idTerceirizada;
   React.useEffect(() => {
-    const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
+    //const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
     if (!usuarioSessao) {
       navigate('/servicossolicitados');
     }
@@ -33,31 +35,70 @@ export const FecharOs = () => {
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
-      console.log(response.data);
+      //  console.log(response.data);
       defineDadosOs(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:".error);
+        //console.error("O erro que aconteceu:".error);
         toast.error("Erro na requisição, verifique sua conexão.")
       })
 
-    axios.get(URL_TERCEIRIZADAS, {
+    axios.get(URL_SERVICOS, {
       params: {
-        opc: 'buscaDadosTerceirizadas',
+        opc: 'buscaDadosServicosOS',
+        idOS: id
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
-      console.log(response.data);
-      defineDadosTerceirizada(response.data);
+      //  console.log(response.data);
+      defineDadosServicosOS(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:".error);
-        toast.error("Erro na requisição, verifique sua conexão.")
+        //console.error("O erro que aconteceu:".error);
+        //    toast.error("Erro na requisição, verifique sua conexão.")
+      })
+
+    axios.get(URL_PECAS, {
+      params: {
+        opc: 'buscaDadosPecasOS',
+        idOS: id
+      }
+    }).then(response => {
+      //  const novoRenderKey = gerarUid();
+      //  console.log(response.data);
+      defineDadosPecasOS(response.data);
+    })
+      .catch((error) => {
+        //console.error("O erro que aconteceu:".error);
+        //    toast.error("Erro na requisição, verifique sua conexão.")
       })
 
   }, []);
 
-  const salvarDados = (dados) => {
+  const totalSer = dadosServicosOS.reduce((valorAtual, item) => {
+    valorAtual += Number(item.valorCobrado);
+    return valorAtual
+  }, 0)
+  const totalServicos = totalSer.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const totalPec = dadosPecasOS.reduce((valorAtual, item) => {
+    valorAtual += Number(item.valorCobrado);
+    return valorAtual
+  }, 0)
+  const totalPecas = totalPec.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  let subTotal = (totalSer + totalPec);
+
+  let totDesconto =  Number(dadosOs?.[0]?.desconto ?? 0);
+
+  const desconto = totDesconto.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  
+  const totalOs = (subTotal - totDesconto).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  subTotal = subTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  
+  const salvarDadosFechamentoOs = (dados) => {
     dados.preventDefault(); // para nao dar o refresh
     const { target } = dados;
     const servicos = target.servicos.value;
@@ -77,11 +118,11 @@ export const FecharOs = () => {
     }
     ).then((resposta) => {
       toast.success('Dados salvos com sucesso !');
-      console.log(resposta.data);
+      //  console.log(resposta.data);
       navigate('/servicossolicitados');
     }).catch((erro) => {
       toast.warning(erro.response.request.statusText);
-      console.log(erro.response.request.statusText);
+      //  console.log(erro.response.request.statusText);
     })
   }
   /*
@@ -108,12 +149,12 @@ export const FecharOs = () => {
   return (
     <>
       <div className="tituloPaginas">Fechando Ordem de Serviço</div>
-      <ul className="containerInputs">
+      <span className="containerInputs">
         {
           dadosOs.map((opc) => {
             if (dadosOs.length > 0) {
               return (
-                <li key={opc.id}>
+                <span key={opc.id}>
                   <p>
                     <b>{opc.nomeUbs}</b>
                   </p>
@@ -130,49 +171,114 @@ export const FecharOs = () => {
                   <p>
                     <b>Ambiente instalado:</b> {opc.ambienteInstalado}
                   </p>
+                  <p><hr /></p>
+                  <p>
+                    <b>Serviço(s) realizado(s): </b>
+                    <span className='maisItensOS'>
+                      <PlusCircleOutlined />
+                    </span>
+                  </p>
+                  {
+                    dadosServicosOS.map((ser) => {
+                      if (dadosServicosOS.length > 0) {
+                        return (
+                          <>
+                            <div key={ser.id}>
+                              <div className='itensOs'>
+                                <div>
+                                  {ser.codigoInterno}
+                                </div>
+                                <div>
+                                  {ser.pecaServico}
+                                </div>
+                                <div>
+                                  {ser.valorCobrado}
+                                </div>
+                                <div>
+                                  {<DeleteOutlined />}
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )
+                      }
 
-                  <form onSubmit={salvarDados}>
+                    })
+                  }
+                  <div className='totalItensOs'>
+                    <div>
+                      Valor total do(s) serviço(s): R$
+                    </div>
+                    <div>
+                      {totalServicos}
+                    </div>
+                    <div></div>
+                  </div>
+                  <p><hr /></p>
+                  <p>
+                    <b>Peça(s) utilizada(s): </b>
+                    <span className='maisItensOS'>
+                      <PlusCircleOutlined />
+                    </span>
+                  </p>
+                  {
+                    dadosPecasOS.map((pec) => {
+                      if (dadosPecasOS.length > 0) {
+                        return (
+                          <>
+                            <div key={pec.id}>
+                              <div className='itensOs'>
+                                <div>
+                                  {pec.codigoInterno}
+                                </div>
+                                <div>
+                                  {pec.pecaServico}
+                                </div>
+                                <div>
+                                  {pec.valorCobrado}
+                                </div>
+                                <div>
+                                  {<DeleteOutlined />}
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )
+                      }
+                    })
+                  }
+                  <div className='totalItensOs'>
+                    <div>
+                      Valor total da(s) peça(s): R$
+                    </div>
+                    <div>
+                      {totalPecas}
+                    </div>
+                    <div></div>
+                  </div>
+                  <p><hr /></p>
+                  <p>
+                    <div className='totalizandoOS'>
+                      <div>
+                        Sub-Total: R$ {subTotal}
+                      </div>
+                      <div>
+                        Desconto: R$ {desconto}
+                        { }
+                      </div>
+                      <div>
+                        <b>TOTAL DA O.S.: R$ {totalOs}</b>
+                      </div>
+                    </div>
+                  </p>
+                  <p><hr /></p>
+                  <form onSubmit={salvarDadosFechamentoOs}>
                     <div className='containerInputs'>
                       <label>
                         <p>
                           Data Fechamento: {dataAtual()}
                         </p>
-                        <p>
-                          <Input label="Serviço realizado:" type="text" name="servicos" size="30" required maxLength="150" placeholder="Digite aqui o serviço realizado" />
-                        </p>
                       </label>
-                      <label>
-                        <p>
-                          <Input label="Peças substituidas:" type="text" name="pecas" size="30" maxLength="150" placeholder="Foram substituídas peças ? Digite aqui." />
-                        </p>
-                      </label>
-                      <label>
-                        <p>
-                          <Input label="Valor do(S) serviço(S):" type="tel" name="valorServicos" size="8" maxLength="12" required onChange={formatarValor} mesmaLinha />
-                        </p>
-                      </label>
-                      <label>
-                        <p>
-                          <Input label="Valor da(s) peça(s):" type="tel" name="valorPecas" size="8" maxLength="12" onChange={formatarValor} mesmaLinha />
-                        </p>
-                      </label>
-                      <label>
-                        <p>
-                          <Input label="Observação:" type="text" name="obs" size="30" maxLength="150" placeholder="Relata aqui alguma obs, caso necessário." />
-                        </p>
-                      </label>
-                      {/*  <label>
-                        <p>
-                          Técnico responsável: 
-                        </p>
-                       <Select
-                          placeholder="Selecione"
-                          style={{ width: 400 }}
-                          onChange={handleChangeTec}
-                          data={opcoesTec}
-                          allowDeselect={true}
-                        /> 
-                      </label>*/}
                     </div>
                     <div className="menuRodapePaginas">
                       <Link to="../servicossolicitados">
@@ -185,12 +291,12 @@ export const FecharOs = () => {
                       </button>
                     </div>
                   </form>
-                </li>
+                </span>
               )
             }
           })
         }
-      </ul>
+      </span>
     </>
   )
 }

@@ -156,5 +156,57 @@ button:hover {
     height: 3rem;
   }
 }
-
+.itensOs {
+  display: flex;
+  font-size: 0.9em;
+  div:nth-child(1) {
+    width: 17%;
+    text-align: center;
+   /* border:1px solid; */
+  }
+  div:nth-child(2) {
+    width: 50%;
+   /* border:1px solid; */
+  }
+  div:nth-child(3) {
+    width: 23%;
+   /* border:1px solid; */
+   text-align: right;
+  }
+  div:nth-child(4) {
+    width: 10%;
+   text-align: center;
+   font-size: 1.4em;
+   color: red;
+  }
+}
+.maisItensOS {
+  font-size: 1.4em;
+  color: green;
+}
+.totalItensOs {
+  display: flex;
+  font-size: 0.9em;
+  font-weight: bold;
+  div:nth-child(1) {
+    width: 65%;
+   /* border:1px solid; */
+  }
+  div:nth-child(2) {
+    width: 25%;
+    text-align: right;
+   /* border:1px solid; */
+  }
+  div:nth-child(3) {
+    width: 10%;
+   text-align: center;
+   font-size: 1.4em;
+   color: red;
+  }
+}
+.totalizandoOS {
+  width: 100%;
+  text-align: right;
+  padding-right: 2.4rem;
+}
 /* fim menu principal */
