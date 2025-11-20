@@ -12,13 +12,13 @@ import './EstiloGeral.css'
 
 export const FecharOs = () => {
   const { id } = useParams();
-  const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
+ // const usuarioLogado = useRecoilValue(usuarioLogadoAtom);
   const [dadosOs, defineDadosOs] = React.useState([]);
   const navigate = useNavigate();
   const [dadosTerceirizada, defineDadosTerceirizada] = React.useState([]);
   // const [idTec, setIdTec] = React.useState([]);
   // const [opcoesTec, setOpcoesTec] = React.useState([]);
-  const codMunic = usuarioLogado.codMunicipio;
+  //const codMunic = usuarioLogado.codMunicipio;
   React.useEffect(() => {
     const usuarioSessao = JSON.parse(sessionStorage.getItem('ubs-usuario'))
     if (!usuarioSessao) {
@@ -28,7 +28,8 @@ export const FecharOs = () => {
     axios.get(URL_OS, {
       params: {
         opc: 'buscaDadosServicosSol',
-        idOS: id
+        idOS: id,
+        status: 'A'
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();

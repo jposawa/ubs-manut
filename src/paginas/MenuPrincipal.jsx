@@ -74,7 +74,7 @@ export const MenuPrincipal = () => {
           </Link>
         ) : null}
         {nivelAcesso == 5 || nivelAcesso == 10 ? (
-          <Link to=''>
+          <Link to='/listatecnicosterceirizadas'>
             <button type="button" className='botaoMenu'>
               <Icone
                 elementoIcone={<UsergroupAddOutlined />}

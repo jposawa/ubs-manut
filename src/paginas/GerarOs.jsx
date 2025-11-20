@@ -37,11 +37,11 @@ export const GerarOs = () => {
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
-      console.log(response.data);
+      //console.log(response.data);
       defineDadosUbs(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:".error);
+       // console.error("O erro que aconteceu:".error);
         toast.error("Erro na requisição, verifique sua conexão.")
       })
 
@@ -51,11 +51,11 @@ export const GerarOs = () => {
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
-      console.log(response.data);
+      //console.log(response.data);
       defineDadosTerceirizada(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:".error);
+       // console.error("O erro que aconteceu:".error);
         toast.error("Erro na requisição, verifique sua conexão.")
       })
   }, []);
@@ -64,7 +64,7 @@ export const GerarOs = () => {
     setAlteraOpc('Selecione');
     setIdUbs(value);
     setIdPro("");
-    console.log(defaltValorProdUbs);
+    //console.log(defaltValorProdUbs);
     axios.get(URL_PRODUTOS, {
       params: {
         opc: 'buscaProdutosUbs',
@@ -72,24 +72,24 @@ export const GerarOs = () => {
       }
     }).then(response => {
       //  const novoRenderKey = gerarUid();
-      console.log(response.data);
+     // console.log(response.data);
       defineProdutosUbs(response.data);
     })
       .catch((error) => {
-        console.error("O erro que aconteceu:", error);
+      //  console.error("O erro que aconteceu:", error);
         toast.error("Erro na requisição, verifique sua conexão.")
       })
-    console.log(`selecionado: ${value}`);
+  //  console.log(`selecionado: ${value}`);
   };
 
   const handleChangePro = value => {
     setIdPro(value);
-    console.log(`selecionado: ${value}`);
+  //  console.log(`selecionado: ${value}`);
   };
 
   const handleChangeTerc = value => {
     setIdTerc(value);
-    console.log(`selecionado: ${value}`);
+ //   console.log(`selecionado: ${value}`);
   };
 
   React.useEffect(() => {

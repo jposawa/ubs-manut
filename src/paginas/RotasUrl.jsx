@@ -18,6 +18,8 @@ import { ListaPecas } from "./ListaPecas";
 import { CadAltPecas } from "./cadAltPecas";
 import { ListaServicos } from "./ListaServicos";
 import { CadAltServicos } from "./cadAltServicos";
+import { ListaTecnicosTerceirizadas } from "./ListaTecnicosTerceirizadas";
+import { CadAltTecnicosTerceirizadas } from "./cadAltTecnicosTerceirizadas";
 
 export const RotasUrl = () => {
   return(
@@ -84,6 +86,15 @@ export const RotasUrl = () => {
       } />
        <Route path="cadaltservicos/:id" exact element = {
         <CadAltServicos/>
+      } />
+      <Route path="listatecnicosterceirizadas" exact element = {
+        <ListaTecnicosTerceirizadas/>
+      } />
+       <Route path="cadalttecnicosterceirizadas" exact element = {
+        <CadAltTecnicosTerceirizadas/>
+      } />
+       <Route path="cadalttecnicosterceirizadas/:id" exact element = {
+        <CadAltTecnicosTerceirizadas/>
       } />
        <Route path="geraros" exact element = {
         <GerarOs/>
