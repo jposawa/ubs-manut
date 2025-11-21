@@ -89,15 +89,14 @@ export const FecharOs = () => {
 
   let subTotal = (totalSer + totalPec);
 
-  let totDesconto =  Number(dadosOs?.[0]?.desconto ?? 0);
+  let totDesconto = Number(dadosOs?.[0]?.desconto ?? 0);
 
   const desconto = totDesconto.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  
+
   const totalOs = (subTotal - totDesconto).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   subTotal = subTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  
   const salvarDadosFechamentoOs = (dados) => {
     dados.preventDefault(); // para nao dar o refresh
     const { target } = dados;
@@ -173,10 +172,17 @@ export const FecharOs = () => {
                   </p>
                   <p><hr /></p>
                   <p>
-                    <b>Serviço(s) realizado(s): </b>
-                    <span className='maisItensOS'>
-                      <PlusCircleOutlined />
-                    </span>
+                    <div className='totalItensOs'>
+                      <div>
+                        Serviço(s) realizado(s):
+                      </div>
+                      <div></div>
+                      <div>
+                        <span className='maisItensOS'>
+                          <PlusCircleOutlined />
+                        </span>
+                      </div>
+                    </div>
                   </p>
                   {
                     dadosServicosOS.map((ser) => {
@@ -216,10 +222,17 @@ export const FecharOs = () => {
                   </div>
                   <p><hr /></p>
                   <p>
-                    <b>Peça(s) utilizada(s): </b>
-                    <span className='maisItensOS'>
-                      <PlusCircleOutlined />
-                    </span>
+                    <div className='totalItensOs'>
+                      <div>
+                        Peça(s) utilizada(s):
+                      </div>
+                      <div></div>
+                      <div>
+                        <span className='maisItensOS'>
+                          <PlusCircleOutlined />
+                        </span>
+                      </div>
+                    </div>
                   </p>
                   {
                     dadosPecasOS.map((pec) => {
